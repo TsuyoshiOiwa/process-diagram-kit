@@ -1,0 +1,83 @@
+# ============================================================
+# BPMN 接続 (フロー / ストローク) クラス集
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (色) のために必須
+#   (bpmn.d2 が本ファイルを spread import して再公開するため、
+#    通常は ...@../lib/bpmn だけで本ファイルのクラスも使える)
+#
+#   承認 -> 完了: {
+#     class: sequence-flow
+#     label: 承認済
+#   }
+#
+# 構成:
+#   - sequence-flow:     実線 + 塗りつぶし矢印 (既定)
+#   - message-flow:      破線 + 始点白抜き円 + 終点白抜き矢印
+#   - association:       点線 + 矢印なし (「--」接続と組み合わせる)
+#   - data-association:  点線 + 終点白抜き矢印
+#
+# 制約 (D2 の仕様上):
+#   - 矢印なしはクラスで指定できないため、association は
+#     接続を「--」で書くこととセットで使う
+#   - 始点矢印 (source-arrowhead) は接続構文に始点エンドポイントが
+#     必要なため、message-flow は接続を「<->」で書くこととセットで使う
+#   - BPMN 標準のスラッシュ付き実線 (デフォルトフロー) は
+#     D2 に同等の矢印形状がないため未提供
+# ============================================================
+
+classes: {
+  # シーケンスフロー (実線 + 塗りつぶし矢印)
+  sequence-flow: {
+    style: {
+      stroke: ${bpmn.sequence-stroke}
+      font-size: 12
+    }
+  }
+  # メッセージフロー (破線, 始点白抜き円 + 終点白抜き矢印)
+  #   ※ 始点円を出すには接続を「<->」で書く必要がある
+  message-flow: {
+    source-arrowhead: {
+      shape: circle
+      style: {
+        filled: false
+        stroke: ${bpmn.message-stroke}
+      }
+    }
+    target-arrowhead: {
+      shape: triangle
+      style: {
+        filled: false
+        stroke: ${bpmn.message-stroke}
+      }
+    }
+    style: {
+      stroke: ${bpmn.message-stroke}
+      stroke-dash: 4
+      font-size: 12
+    }
+  }
+  # 関連 (点線, 矢印なし → 「--」接続で使う)
+  association: {
+    style: {
+      stroke: ${bpmn.association-stroke}
+      stroke-dash: 2
+      font-size: 12
+    }
+  }
+  # データ関連 (点線 + 終点白抜き矢印)
+  data-association: {
+    target-arrowhead: {
+      shape: triangle
+      style: {
+        filled: false
+        stroke: ${bpmn.association-stroke}
+      }
+    }
+    style: {
+      stroke: ${bpmn.association-stroke}
+      stroke-dash: 2
+      font-size: 12
+    }
+  }
+}

@@ -1,0 +1,303 @@
+# ============================================================
+# 動作確認: lib/components/ のテンプレート
+#   新規テンプレートはこのファイルで見た目を確認する
+# ============================================================
+...@../lib/bpmn
+
+direction: right
+
+# ------------------------------------------------------------
+# タスク (components/task.d2)
+#   desc に説明文を設定できる (任意)
+# ------------------------------------------------------------
+汎用タスク: @../lib/components/task.task
+汎用タスク: task
+
+アドホックタスク: @../lib/components/task.ad-hoc-task
+アドホックタスク: ad-hoc-task
+
+ループタスク: @../lib/components/task.loop-task
+ループタスク: loop-task
+
+並列マルチインスタンスタスク: @../lib/components/task.multi-instance-parallel-task
+並列マルチインスタンスタスク: multi-instance-parallel-task
+
+逐次マルチインスタンスタスク: @../lib/components/task.multi-instance-sequential-task
+逐次マルチインスタンスタスク: multi-instance-sequential-task
+
+補償タスク: @../lib/components/task.compensation-task
+補償タスク: compensation-task
+
+# ------------------------------------------------------------
+# フロー (components/stroke.d2)
+#   接続に class を適用する
+#   association は矢印なしの「--」で、message-flow は
+#   始点円のために「<->」で接続する
+# ------------------------------------------------------------
+汎用タスク -> アドホックタスク: {
+  class: sequence-flow
+  label: シーケンスフロー
+}
+
+ループタスク <-> 並列マルチインスタンスタスク: {
+  class: message-flow
+  label: メッセージフロー
+}
+
+アドホックタスク -- 逐次マルチインスタンスタスク: {
+  class: association
+  label: 関連
+}
+
+逐次マルチインスタンスタスク -> 補償タスク: {
+  class: data-association
+  label: データ関連
+}
+
+# ------------------------------------------------------------
+# イベント (components/event.d2)
+#   外枠付き SVG アイコンを shape: image で表示 (全 36種)
+#   開始 = 単一細枠 / 中間 = 二重円 / 終了 = 太枠
+# ------------------------------------------------------------
+# --- 開始イベント (単一細枠・9種) ---
+開始.class: start-none-event
+開始: 開始
+
+開始メッセージ.class: start-message-event
+開始メッセージ: メッセージ
+
+開始タイマー.class: start-timer-event
+開始タイマー: タイマー
+
+開始条件.class: start-conditional-event
+開始条件: 条件
+
+開始シグナル.class: start-signal-event
+開始シグナル: シグナル
+
+開始複合.class: start-multiple-event
+開始複合: 複合
+
+開始並列複合.class: start-parallel-multiple-event
+開始並列複合: 並列複合
+
+開始エスカレーション.class: start-escalation-event
+開始エスカレーション: エスカレーション
+
+開始エラー.class: start-error-event
+開始エラー: エラー
+
+開始 -> 開始メッセージ
+開始メッセージ -> 開始タイマー
+開始タイマー -> 開始条件
+開始条件 -> 開始シグナル
+開始シグナル -> 開始複合
+開始複合 -> 開始並列複合
+開始並列複合 -> 開始エスカレーション
+開始エスカレーション -> 開始エラー
+
+# --- 中間イベント (二重円・18種) ---
+中間.class: intermediate-none-event
+中間: 中間
+
+中間メッセージキャッチ.class: intermediate-message-catch-event
+中間メッセージキャッチ: メッセージ
+
+中間メッセージスロー.class: intermediate-message-throw-event
+中間メッセージスロー: メッセージ
+
+中間タイマーキャッチ.class: intermediate-timer-catch-event
+中間タイマーキャッチ: タイマー
+
+中間条件キャッチ.class: intermediate-conditional-catch-event
+中間条件キャッチ: 条件
+
+中間リンクキャッチ.class: intermediate-link-catch-event
+中間リンクキャッチ: リンク
+
+中間リンクスロー.class: intermediate-link-throw-event
+中間リンクスロー: リンク
+
+中間シグナルキャッチ.class: intermediate-signal-catch-event
+中間シグナルキャッチ: シグナル
+
+中間シグナルスロー.class: intermediate-signal-throw-event
+中間シグナルスロー: シグナル
+
+中間複合キャッチ.class: intermediate-multiple-catch-event
+中間複合キャッチ: 複合
+
+中間複合スロー.class: intermediate-multiple-throw-event
+中間複合スロー: 複合
+
+中間並列複合キャッチ.class: intermediate-parallel-multiple-catch-event
+中間並列複合キャッチ: 並列複合
+
+中間エスカレーションキャッチ.class: intermediate-escalation-catch-event
+中間エスカレーションキャッチ: エスカレーション
+
+中間エスカレーションスロー.class: intermediate-escalation-throw-event
+中間エスカレーションスロー: エスカレーション
+
+中間補償キャッチ.class: intermediate-compensation-catch-event
+中間補償キャッチ: 補償
+
+中間補償スロー.class: intermediate-compensation-throw-event
+中間補償スロー: 補償
+
+中間キャンセルキャッチ.class: intermediate-cancel-catch-event
+中間キャンセルキャッチ: キャンセル
+
+中間エラーキャッチ.class: intermediate-error-catch-event
+中間エラーキャッチ: エラー
+
+中間 -> 中間メッセージキャッチ
+中間メッセージキャッチ -> 中間メッセージスロー
+中間メッセージスロー -> 中間タイマーキャッチ
+中間タイマーキャッチ -> 中間条件キャッチ
+中間条件キャッチ -> 中間リンクキャッチ
+中間リンクキャッチ -> 中間リンクスロー
+中間リンクスロー -> 中間シグナルキャッチ
+中間シグナルキャッチ -> 中間シグナルスロー
+中間シグナルスロー -> 中間複合キャッチ
+中間複合キャッチ -> 中間複合スロー
+中間複合スロー -> 中間並列複合キャッチ
+中間並列複合キャッチ -> 中間エスカレーションキャッチ
+中間エスカレーションキャッチ -> 中間エスカレーションスロー
+中間エスカレーションスロー -> 中間補償キャッチ
+中間補償キャッチ -> 中間補償スロー
+中間補償スロー -> 中間キャンセルキャッチ
+中間キャンセルキャッチ -> 中間エラーキャッチ
+
+# --- 終了イベント (太枠・9種) ---
+終了.class: end-none-event
+終了: 終了
+
+終了メッセージ.class: end-message-event
+終了メッセージ: メッセージ
+
+終了エスカレーション.class: end-escalation-event
+終了エスカレーション: エスカレーション
+
+終了エラー.class: end-error-event
+終了エラー: エラー
+
+終了キャンセル.class: end-cancel-event
+終了キャンセル: キャンセル
+
+終了補償.class: end-compensation-event
+終了補償: 補償
+
+終了シグナル.class: end-signal-event
+終了シグナル: シグナル
+
+終了複合.class: end-multiple-event
+終了複合: 複合
+
+終了終了.class: end-terminate-event
+終了終了: 終了
+
+終了 -> 終了メッセージ
+終了メッセージ -> 終了エスカレーション
+終了エスカレーション -> 終了エラー
+終了エラー -> 終了キャンセル
+終了キャンセル -> 終了補償
+終了補償 -> 終了シグナル
+終了シグナル -> 終了複合
+終了複合 -> 終了終了
+
+# 接続例 (円の接続アンカーとアイコンの確認)
+開始 -> 中間メッセージキャッチ: {
+  class: sequence-flow
+  label: フロー
+}
+
+中間タイマーキャッチ -> 補償タスク: {
+  class: sequence-flow
+  label: タイムアウト
+}
+
+# ------------------------------------------------------------
+# コンテナ (components/container.d2)
+#   プール / レーンともテンプレートを部分import する
+#   ラベルは左中央に表示される (BPMN の左ラベル帯の代用)
+# ------------------------------------------------------------
+プール: @../lib/components/container.pool
+プール: プール
+プール: {
+  レーン1: @../lib/components/container.lane
+  レーン1: レーン1
+  レーン1: {
+    レーン1タスク: @../lib/components/task.task
+    レーン1タスク: レーン1のタスク
+  }
+
+  レーン2: @../lib/components/container.lane
+  レーン2: レーン2
+  レーン2: {
+    レーン2タスク: @../lib/components/task.task
+    レーン2タスク: レーン2のタスク
+  }
+
+  レーン1.レーン1タスク -> レーン2.レーン2タスク
+}
+
+# ------------------------------------------------------------
+# ゲートウェイ (components/gateway.d2)
+#   菱形 SVG アイコンを shape: image で表示 (全 5種)
+# ------------------------------------------------------------
+排他.class: exclusive-gateway
+排他: 排他 (XOR)
+
+並列.class: parallel-gateway
+並列: 並列 (AND)
+
+包含.class: inclusive-gateway
+包含: 包含 (OR)
+
+複雑.class: complex-gateway
+複雑: 複雑
+
+イベント駆動.class: event-based-gateway
+イベント駆動: イベント駆動
+
+排他 -> 並列
+並列 -> 包含
+包含 -> 複雑
+複雑 -> イベント駆動
+
+# 接続例 (菱形の接続アンカーとアイコンの確認)
+排他 -> 汎用タスク: {
+  class: sequence-flow
+  label: フロー
+}
+
+# ------------------------------------------------------------
+# データ要素 (components/data.d2)
+#   D2 ネイティブ図形で描画 (全 3種)
+#   data-variation は本ライブラリ独自要素 (BPMN 規格外)
+# ------------------------------------------------------------
+注文データ.class: data-object
+注文データ: 注文データ
+
+顧客DB.class: data-store
+顧客DB: 顧客DB
+
+注文明細.class: data-variation
+注文明細: 注文明細 (亜種)
+
+# 接続例 (データ関連は点線 + 白抜き矢印)
+注文データ -> 汎用タスク: {
+  class: data-association
+  label: 参照
+}
+
+顧客DB -- 注文データ: {
+  class: association
+  label: 関連
+}
+
+注文明細 -> 注文データ: {
+  class: data-association
+  label: 派生
+}

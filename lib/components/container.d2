@@ -1,0 +1,47 @@
+# ============================================================
+# BPMN コンテナ要素 (プール / レーン) テンプレート集
+#
+# 図ファイルから直接 部分import して使う
+# (テンプレートは実要素として描画されるため、bpmn.d2 経由の
+#  spread import はしない)
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (色) のために必須
+#   顧客: @../lib/components/container.pool
+#   顧客: 顧客                       # プール名
+#   (子要素のレーン・タスク等は通常どおりネストして書く)
+#
+# 構成:
+#   - pool: プール (組織・システムの境界, 太枠)
+#   - lane: レーン (プール内の担当区分)
+#
+# 制約 (D2 の仕様上):
+#   - BPMN 標準の縦書きラベル帯は D2 が縦書き不可のため
+#     label.near: center-left (横書き・左中央) で代用する
+#   - ラベル用の空き領域はレイアウトエンジンが保証しないため、
+#     子要素と重なる場合は図側で子の位置やサイズを調整する
+#   - コンテナのサイズは子要素とパディングから自動決定される
+# ============================================================
+
+# プール (組織・システムの境界)
+pool: {
+  label.near: center-left
+  style: {
+    fill: ${bpmn.pool-fill}
+    stroke: ${bpmn.pool-stroke}
+    stroke-width: 2
+    font-size: 16
+    bold: true
+  }
+}
+
+# レーン (プール内の担当区分)
+lane: {
+  label.near: center-left
+  style: {
+    fill: ${bpmn.lane-fill}
+    stroke: ${bpmn.lane-stroke}
+    stroke-width: 1
+    font-size: 14
+  }
+}

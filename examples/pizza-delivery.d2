@@ -1,0 +1,192 @@
+# ============================================================
+# サンプル: ピザ配達プロセス
+#   lib/bpmn.d2 のクラスと lib/components/ のテンプレートを
+#   使った BPMN 図の例
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+# ---- プール: 顧客 ----
+顧客: @../lib/components/container.pool
+顧客: 顧客
+顧客: {
+  top: 0
+  left: 0
+  direction: right
+  注文.class: start-none-event
+  注文: ピザが食べたい
+  注文.top: 0
+  注文.left: 0
+  決済方法1.class: exclusive-gateway
+  決済方法1: 決済方法
+  ネット決済: @../lib/components/task.task
+  ネット決済: ネット決済で支払う
+  ピザ注文: @../lib/components/task.task
+  ピザ注文: ピザの注文をする
+  待機.class: event-based-gateway
+  待機: 連絡待ち
+  キャンセル受信.class: intermediate-message-catch-event
+  キャンセル受信: キャンセル連絡受信
+  断念.class: end-none-event
+  断念: 注文断念
+  受取.class: intermediate-message-catch-event
+  受取: ピザ受け取り
+  決済方法2.class: exclusive-gateway
+  決済方法2: 決済方法
+  支払: @../lib/components/task.task
+  支払: 代金を支払う
+  食事.class: end-none-event
+  食事: 食事完了
+  食事.top: 0
+  食事.left: 1700
+  注文 -> 決済方法1
+  決済方法1 -> ネット決済: 前払い
+  ネット決済 -> ピザ注文
+  決済方法1 -> ピザ注文: 後払い
+  ピザ注文 -> 待機
+  待機 -> キャンセル受信
+  待機 -> 受取
+  受取 -> 決済方法2
+  決済方法2 -> 支払: 後払い
+  決済方法2 -> 食事: 前払い
+  支払 -> 食事
+  キャンセル受信 -> 断念
+}
+
+# ---- プール: ピザ店 ----
+ピザ店: @../lib/components/container.pool
+ピザ店: ピザ店
+ピザ店: {
+  top: 500
+  left: 0
+  direction: down
+  # ---- レーン: 受付 ----
+  受付: @../lib/components/container.lane
+  受付: 受付
+  受付: {
+    top: 0
+    left: 0
+    direction: right
+    注文受付.class: start-message-event
+    注文受付: 注文受付
+    注文受付.top: 0
+    注文受付.left: 0
+    
+    注文確認: @../lib/components/task.task
+    注文確認: 注文内容確認
+    在庫確認.class: exclusive-gateway
+    在庫確認: 在庫確認
+    注文処理依頼: @../lib/components/task.task
+    注文処理依頼: 注文処理を依頼する
+    決済方法.class: exclusive-gateway
+    決済方法: 決済方法
+    決済キャンセル: @../lib/components/task.task
+    決済キャンセル: 決済キャンセル処理
+    お詫び: @../lib/components/task.task
+    お詫び: 丁重にお詫び
+    断了.class: end-none-event
+    断了: 注文キャンセル
+  }
+
+  # ---- レーン: 調理 ----
+  調理: @../lib/components/container.lane
+  調理: 調理
+  調理: {
+    direction: right
+    調理開始: @../lib/components/task.task
+    調理開始: ピザを調理
+    焼成.class: intermediate-timer-catch-event
+    焼成: オーブンで焼成
+    検品: @../lib/components/task.task
+    検品: 検品・梱包
+  }
+
+  # ---- レーン: 配達 ----
+  配達: @../lib/components/container.lane
+  配達: 配達
+  配達: {
+    direction: right
+    配達手配: @../lib/components/task.task
+    配達手配: 配達手配
+    配達手配.desc.label: 配送先とピザの照合
+    配達実施: @../lib/components/task.task
+    配達実施: ピザ配達
+    決済方法.class: exclusive-gateway
+    決済方法: 決済方法
+    代金受領: @../lib/components/task.task
+    代金受領: 代金受領
+    完了.class: end-none-event
+    完了: 配達完了
+  }
+
+  # ---- シーケンスフロー ----
+  受付.注文受付 -> 受付.注文確認
+  受付.注文確認 -> 受付.在庫確認
+  受付.在庫確認 -> 受付.注文処理依頼: あり
+  受付.注文処理依頼 -> 調理.調理開始
+  受付.在庫確認 -> 受付.決済方法: なし
+  受付.決済方法 -> 受付.決済キャンセル: 前払い
+  受付.決済キャンセル -> 受付.お詫び
+  受付.決済方法 -> 受付.お詫び: 後払い
+  受付.お詫び -> 受付.断了
+  調理.調理開始 -> 調理.焼成
+  調理.焼成 -> 調理.検品
+  調理.検品 -> 配達.配達手配
+  配達.配達手配 -> 配達.配達実施
+  配達.配達実施 -> 配達.決済方法
+  配達.決済方法 -> 配達.代金受領: 後払い
+  配達.決済方法 -> 配達.完了: 前払い
+  配達.代金受領 -> 配達.完了
+
+  # ---- データオブジェクト ----
+  受付.注文情報1.class: data-object
+  受付.注文情報1: |md
+      注文情報
+      - ピザ情報
+      - 配送情報
+      - 決済情報
+    |
+  配達.注文情報2.class: data-object
+  配達.注文情報2: |md
+    注文情報
+    - ピザ情報
+    - 配送情報
+    - 決済情報
+  |
+  調理.ピザ情報1.class: data-object
+  調理.ピザ情報1: |md
+    注文情報
+    - ピザ情報
+  |
+
+  # ---- データ関連 ----
+  受付.注文確認 -> 受付.注文情報1: {
+    class: data-association
+  }
+  調理.ピザ情報1 -> 調理.調理開始: {
+    class: data-association
+  }
+  配達.注文情報2 -> 配達.配達手配: {
+    class: data-association
+  }
+}
+# 顧客 -> ピザ店
+
+# ---- メッセージフロー (プール間, 始点円のため <-> で接続) ----
+顧客.ピザ注文 <-> ピザ店.受付.注文受付: {
+  class: message-flow
+  label: ピザ注文
+}
+ピザ店.配達.配達実施 <-> 顧客.受取: {
+  class: message-flow
+  label: ピザ
+}
+ピザ店.受付.お詫び <-> 顧客.キャンセル受信: {
+  class: message-flow
+  label: キャンセル連絡
+}
+顧客.支払 <-> ピザ店.配達.代金受領: {
+  class: message-flow
+  label: 代金
+}

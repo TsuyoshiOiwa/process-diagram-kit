@@ -1,0 +1,118 @@
+# ============================================================
+# BPMN 共通ライブラリ (d2 v0.8+)
+#
+# 使い方:
+#   図ファイルの先頭でインポートすると vars / classes が利用可能
+#     ...@../lib/bpmn.d2
+#
+#   例) タスク形状を適用する
+#     受注登録.class: task
+#     受注登録: 受注登録
+#
+#   例) メッセージフローを描く (始点円のため <-> で接続)
+#     顧客.注文 <-> 自社.受注確認: {
+#       class: message-flow
+#       label: 注文書
+#     }
+#
+# タスク (テンプレート) の使い方:
+#   タスクは lib/components/task.d2 のテンプレートを部分import する
+#     受注登録: @../lib/components/task.user-task
+#     受注登録: 受注登録
+#     受注登録.desc: 内容を確認する   # 説明文 (任意)
+#
+# プール / レーン (テンプレート) の使い方:
+#   プール・レーンも lib/components/container.d2 のテンプレートを
+#   部分import する (ラベルを左中央に表示)
+#     顧客: @../lib/components/container.pool
+#     顧客: 顧客
+#     営業: @../lib/components/container.lane
+#
+# フロー (接続) のクラスは lib/components/stroke.d2 で、
+# イベント種別 (アイコン付き) のクラスは lib/components/event.d2 で、
+# ゲートウェイ種別 (アイコン付き) のクラスは lib/components/gateway.d2 で、
+# データ要素 (data-object / data-store / data-variation) のクラスは
+# lib/components/data.d2 で定義し、下記の spread import で再公開している
+# (...@../lib/bpmn だけで使える)
+# ============================================================
+
+...@components/stroke
+...@components/event
+...@components/gateway
+...@components/data
+
+vars: {
+  # D2 全体設定
+  d2-config: {
+    layout-engine: elk
+    theme-id: 0
+    pad: 60
+  }
+
+  # ----------------------------------------------------------
+  # 色トークン (カスタマイズはここのみ変更する)
+  # ----------------------------------------------------------
+  bpmn: {
+    # アイコンディレクトリ (図ファイルからの相対パス)
+    # ※ 部分import したテンプレート内の icon は
+    #    図ファイルの位置を基準に解決されるため、ここで指定する
+    #    (図が別階層にある場合は図側で vars.bpmn.icon-dir を上書き)
+    icon-dir: "../lib/icons"
+    # イベント
+    start-fill: "#DCFCE7"
+    start-stroke: "#16A34A"
+    intermediate-fill: "#FEF9C3"
+    intermediate-stroke: "#CA8A04"
+    end-fill: "#FEE2E2"
+    end-stroke: "#DC2626"
+    # タスク / サブプロセス
+    task-fill: "#E8F1FF"
+    task-stroke: "#2563EB"
+    task-icon-size: 30
+    subprocess-fill: "#F0F9FF"
+    # プール / レーン
+    pool-fill: "#F3F4F6"
+    pool-stroke: "#6B7280"
+    lane-fill: "#F9FAFB"
+    lane-stroke: "#9CA3AF"
+    # データ (data-object / data-store / data-variation)
+    data-fill: "#CFFAFE"
+    data-stroke: "#0891B2"
+    # フロー
+    sequence-stroke: "#4B5563"
+    message-stroke: "#9333EA"
+    association-stroke: "#9CA3AF"
+  }
+}
+
+classes: {
+  # --------------------------------------------------------
+  # アクティビティ
+  # --------------------------------------------------------
+  # タスク (task / user-task など) はテンプレートのため
+  # lib/components/task.d2 を図から部分import する
+  # サブプロセス (破線枠 + 角丸)
+  subprocess: {
+    style: {
+      fill: ${bpmn.subprocess-fill}
+      stroke: ${bpmn.task-stroke}
+      stroke-width: 2
+      border-radius: 6
+      stroke-dash: 4
+    }
+  }
+
+  # --------------------------------------------------------
+  # ゲートウェイ (exclusive-gateway / parallel-gateway など)
+  #   アイコン付きのため lib/components/gateway.d2 で定義し
+  #   冒頭で再公開している
+  #
+  # プール / レーン
+  #   テンプレートのため lib/components/container.d2 を
+  #   図から部分import する
+  #
+  # フロー (接続に適用)
+  #   lib/components/stroke.d2 で定義し冒頭で再公開
+  #   (sequence-flow / message-flow / association / data-association)
+  # --------------------------------------------------------
+}

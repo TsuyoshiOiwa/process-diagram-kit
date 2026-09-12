@@ -1,0 +1,222 @@
+# ============================================================
+# BPMN タスク要素 (テンプレート集)
+#
+# 図ファイルから直接 部分import して使う
+# (テンプレートは実要素として描画されるため、bpmn.d2 経由の
+#  spread import はしない)
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (色) のために必須
+#   承認: @../lib/components/task.user-task
+#   承認: 承認処理                    # タスク名
+#   承認.desc: 人間が確認する処理です   # 説明文 (任意)
+#
+# 構成:
+#   - タスクをコンテナとして定義 (クラスは子要素を持てないため)
+#   - marker: 種別アイコン (サイズは vars.bpmn.task-icon-size)
+#   - desc:   説明文用の text 子要素 (未設定なら領域を取らない)
+#
+# アイコンパスについて:
+#   部分import では icon の相対パスが「図ファイルの位置」基準で
+#   解決されるため、vars.bpmn.icon-dir (lib/bpmn.d2 で定義) を
+#   経由して参照する。図が別階層にある場合は図側で
+#   vars.bpmn.icon-dir を上書きすること。
+#
+# 制約 (D2 の仕様上):
+#   - marker の位置はレイアウトエンジンが決める (下中央等の固定は不可)
+#   - コンテナのサイズは子要素とパディングから自動決定される
+#   - タスク名は自動折返ししない (長い場合は <br/> で改行する)
+# ============================================================
+
+classes: {
+  empty: {
+    label: ""
+    style.opacity: 0
+    style: {
+      opacity: 0
+    }
+  }
+  description: {
+    label: "empty"
+    shape: text
+    style: {font-size: 12}
+  }
+}
+
+# 汎用タスク (アイコンなし)
+task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-loop.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+      opacity: 0
+    }
+    width: 18
+    height: 18
+  }
+}
+
+# --------------------------------------------------------
+# タスク種別 (下中央のアイコンで識別)
+# --------------------------------------------------------
+# ad hoc task
+ad-hoc-task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-ad-hoc.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+    }
+    width: 24
+    height: 24
+  }
+}
+
+# loop task
+loop-task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-loop.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+    }
+    width: 24
+    height: 24
+  }
+}
+
+# parallel multi-instance task
+multi-instance-parallel-task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-multi-instance-parallel.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+    }
+    width: 24
+    height: 24
+  }
+}
+
+# sequential multi-instance task
+multi-instance-sequential-task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-multi-instance-sequential.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+    }
+    width: 24
+    height: 24
+  }
+}
+
+# compensation task
+compensation-task: {
+  grid-rows: 2
+  grid-columns: 1
+  horizontal-gap: 0
+  vertical-gap: 6
+  style: {
+    fill: ${bpmn.task-fill}
+    stroke: ${bpmn.task-stroke}
+    stroke-width: 2
+    border-radius: 6
+    font-size: 18
+  }
+  desc: {
+    shape: text
+  }
+  marker: {
+    shape: image
+    label: ""
+    icon: ${bpmn.icon-dir}/marker-compensation.svg
+    style: {
+      stroke-width: 0
+      fill: transparent
+    }
+    width: 24
+    height: 24
+  }
+}

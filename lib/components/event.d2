@@ -1,0 +1,373 @@
+# ============================================================
+# BPMN イベント種別 (クラス集)
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (アイコンDir) のために必須
+#   (bpmn.d2 が本ファイルを spread import して再公開するため、
+#    通常は ...@../lib/bpmn だけで本ファイルのクラスも使える)
+#
+#   タイマー.class: intermediate-timer-catch-event
+#   タイマー: 10分経過
+#
+# 構成 (全 36種・新SVGセットと 1:1):
+#   - 開始系 9種: 単一細枠の円 + 種別アイコン
+#       none / メッセージ / タイマー / 条件 / シグナル /
+#       複合 / 並列複合 / エスカレーション / エラー
+#   - 中間系 18種: 二重円 + 種別アイコン
+#       none / メッセージ / タイマー / 条件 / リンク /
+#       シグナル / 複合 / 並列複合 / エスカレーション /
+#       補償 / キャンセル / エラー (キャッチ・スロー別)
+#   - 終了系 9種: 太枠の円 + 種別アイコン
+#       none / メッセージ / エスカレーション / エラー /
+#       キャンセル / 補償 / シグナル / 複合 / 終了
+#
+# 規約:
+#   - SVG アイコン側に外枠の円 (単一 / 二重 / 太線) が
+#     含まれるため、クラスは shape: image でアイコンを
+#     そのまま表示する (D2 側での枠描画・色指定は不要)
+#   - ラベルは円の外上部に配置 (label.near: outside-top-center)
+#
+# アイコンパスについて:
+#   クラス内の icon は「図ファイルの位置」基準で解決されるため、
+#   vars.bpmn.icon-dir (lib/bpmn.d2 で定義) を経由して参照する。
+#   図が別階層にある場合は図側で vars.bpmn.icon-dir を上書き
+#   すること (task.d2 と同じ仕組み)。
+# ============================================================
+
+classes: {
+  # --------------------------------------------------------
+  # 開始イベント (単一細枠の円 + アイコン)
+  # --------------------------------------------------------
+  # none (アイコンなし開始イベント)
+  start-none-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-none-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # message start event
+  start-message-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-message-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # timer start event
+  start-timer-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-timer-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # conditional start event
+  start-conditional-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-conditional-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # signal start event
+  start-signal-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-signal-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # multiple start event
+  start-multiple-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-multiple-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # parallel multiple start event
+  start-parallel-multiple-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-parallel-multiple-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # escalation start event
+  start-escalation-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-escalation-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # error start event
+  start-error-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-error-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+
+  # --------------------------------------------------------
+  # 中間イベント (二重円 + アイコン)
+  # --------------------------------------------------------
+  # none (アイコンなし中間イベント)
+  intermediate-none-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-none-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # message intermediate catch event
+  intermediate-message-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-message-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # message intermediate throw event
+  intermediate-message-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-message-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # timer intermediate catch event
+  intermediate-timer-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-timer-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # conditional intermediate catch event
+  intermediate-conditional-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-conditional-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # link intermediate catch event
+  intermediate-link-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-link-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # link intermediate throw event
+  intermediate-link-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-link-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # signal intermediate catch event
+  intermediate-signal-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-signal-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # signal intermediate throw event
+  intermediate-signal-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-signal-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # multiple intermediate catch event
+  intermediate-multiple-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-multiple-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # multiple intermediate throw event
+  intermediate-multiple-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-multiple-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # parallel multiple intermediate catch event
+  intermediate-parallel-multiple-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-parallel-multiple-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # escalation intermediate catch event
+  intermediate-escalation-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-escalation-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # escalation intermediate throw event
+  intermediate-escalation-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-escalation-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # compensation intermediate catch event
+  intermediate-compensation-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-compensation-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # compensation intermediate throw event
+  intermediate-compensation-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-compensation-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # cancel intermediate catch event
+  intermediate-cancel-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-cancel-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # error intermediate catch event
+  intermediate-error-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-error-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+
+  # --------------------------------------------------------
+  # 終了イベント (太枠の円 + アイコン)
+  # --------------------------------------------------------
+  # none (アイコンなし終了イベント)
+  end-none-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-none-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # message end event
+  end-message-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-message-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # escalation end event
+  end-escalation-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-escalation-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # error end event
+  end-error-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-error-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # cancel end event
+  end-cancel-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-cancel-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # compensation end event
+  end-compensation-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-compensation-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # signal end event
+  end-signal-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-signal-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # multiple end event
+  end-multiple-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-multiple-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # terminate end event
+  end-terminate-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-terminate-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+}

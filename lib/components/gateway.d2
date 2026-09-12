@@ -1,0 +1,78 @@
+# ============================================================
+# BPMN ゲートウェイ種別 (クラス集)
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (アイコンDir) のために必須
+#   (bpmn.d2 が本ファイルを spread import して再公開するため、
+#    通常は ...@../lib/bpmn だけで本ファイルのクラスも使える)
+#
+#   判定.class: exclusive-gateway
+#   判定: 受注可否
+#
+# 構成 (全 5種・新SVGセットと 1:1):
+#   - exclusive-gateway:   排他 (XOR, × マーク)
+#   - parallel-gateway:    並列 (AND, + マーク)
+#   - inclusive-gateway:   包含 (OR, ○ マーク)
+#   - complex-gateway:     複雑 (× と + の複合マーク)
+#   - event-based-gateway: イベント駆動 (二重円 + 星マーク)
+#
+# 規約:
+#   - SVG アイコン側に菱形の外枠が含まれるため、クラスは
+#     shape: image でアイコンをそのまま表示する
+#     (D2 側での枠描画・色指定は不要)
+#   - ラベルは菱形の外上部に配置 (label.near: outside-top-center)
+#
+# アイコンパスについて:
+#   クラス内の icon は「図ファイルの位置」基準で解決されるため、
+#   vars.bpmn.icon-dir (lib/bpmn.d2 で定義) を経由して参照する。
+#   図が別階層にある場合は図側で vars.bpmn.icon-dir を上書き
+#   すること (event.d2 / task.d2 と同じ仕組み)。
+# ============================================================
+
+classes: {
+  # exclusive gateway (XOR, 条件分岐)
+  exclusive-gateway: {
+    shape: image
+    icon: ${bpmn.icon-dir}/gateway-exclusive.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # parallel gateway (AND, 並列開始/合流)
+  parallel-gateway: {
+    shape: image
+    icon: ${bpmn.icon-dir}/gateway-parallel.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # inclusive gateway (OR, 複数条件分岐)
+  inclusive-gateway: {
+    shape: image
+    icon: ${bpmn.icon-dir}/gateway-inclusive.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # complex gateway (複雑条件)
+  complex-gateway: {
+    shape: image
+    icon: ${bpmn.icon-dir}/gateway-complex.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # event-based gateway (イベント駆動分岐)
+  event-based-gateway: {
+    shape: image
+    icon: ${bpmn.icon-dir}/gateway-event-based.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+}

@@ -1,0 +1,61 @@
+# ============================================================
+# BPMN データ要素 (クラス集)
+#
+# 使い方:
+#   ...@../lib/bpmn                  # vars (色) のために必須
+#   (bpmn.d2 が本ファイルを spread import して再公開するため、
+#    通常は ...@../lib/bpmn だけで本ファイルのクラスも使える)
+#
+#   注文データ.class: data-object
+#   注文データ: 注文データ
+#
+# 構成 (全 3種):
+#   - data-object:    データオブジェクト (折り返し付き文書形)
+#   - data-store:     データストア (円筒形)
+#   - data-variation: データバリエーション (本ライブラリ独自要素,
+#                     BPMN 規格外。パッケージ形で派生・亜種を表す)
+#
+# 規約:
+#   - D2 ネイティブ図形 (page / cylinder / package) で描画するため
+#     SVG アイコンは使わない (D2 側で枠描画・色指定を行う)
+#   - ラベルは図形内に表示される
+#
+# 制約 (D2 の仕様上):
+#   - BPMN 標準のデータオブジェクトは角に折り返しのみだが、
+#     shape: page は折り返し付き文書形として描画される
+#   - データ入出力マーカー (角の薄い三角形) は D2 に同等の
+#     表現がないため省略する
+# ============================================================
+
+classes: {
+  # データオブジェクト (折り返し付き文書形)
+  data-object: {
+    shape: page
+    style: {
+      fill: ${bpmn.data-fill}
+      stroke: ${bpmn.data-stroke}
+      stroke-width: 1
+      font-size: 12
+    }
+  }
+  # データストア (円筒形)
+  data-store: {
+    shape: cylinder
+    style: {
+      fill: ${bpmn.data-fill}
+      stroke: ${bpmn.data-stroke}
+      stroke-width: 1
+      font-size: 12
+    }
+  }
+  # データバリエーション (本ライブラリ独自要素 / BPMN 規格外)
+  data-variation: {
+    shape: package
+    style: {
+      fill: ${bpmn.data-fill}
+      stroke: ${bpmn.data-stroke}
+      stroke-width: 1
+      font-size: 12
+    }
+  }
+}
