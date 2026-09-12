@@ -7,6 +7,12 @@
 
 direction: down
 
+title: |md
+  # ピザ配達
+  更新日時: 2026/09/13
+|
+title.near: top-center
+
 # ---- プール: 顧客 ----
 顧客: @../lib/components/container.pool
 顧客: 顧客
@@ -87,12 +93,15 @@ direction: down
     お詫び: 丁重にお詫び
     断了.class: end-none-event
     断了: 注文キャンセル
+
   }
 
   # ---- レーン: 調理 ----
   調理: @../lib/components/container.lane
   調理: 調理
   調理: {
+    top:1050
+    left:200
     direction: right
     調理開始: @../lib/components/task.task
     調理開始: ピザを調理
@@ -106,6 +115,8 @@ direction: down
   配達: @../lib/components/container.lane
   配達: 配達
   配達: {
+    top: 550
+    left: 700
     direction: right
     配達手配: @../lib/components/task.task
     配達手配: 配達手配
