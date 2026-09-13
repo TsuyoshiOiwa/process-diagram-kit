@@ -37,7 +37,7 @@
 構造 (全テンプレート共通、marker は種別付きのみ):
 
 ```d2
-user-task: {
+task: {
   style: {
     fill: ${bpmn.task-fill}
     stroke: ${bpmn.task-stroke}
@@ -58,7 +58,6 @@ user-task: {
 }
 ```
 
-- `task` (汎用, marker なし), `user-task`, `manual-task`, `service-task`, `script-task`, `business-rule-task`, `send-task`, `receive-task`
 - ファイルヘッダに使い方・制約をコメント記載
 - ※ `width: ${bpmn.task-icon-size}` が数値フィールドで機能しない場合は 30 を直書きに変更
 
@@ -75,7 +74,7 @@ user-task: {
 
 ```d2
 ...@../lib/bpmn                                # vars 用に必須
-受注確認: @../lib/components/task.user-task
+受注確認: @../lib/components/task.task
 受注確認: 受注内容確認                          # タスク名
 受注確認.desc: 内容を確認して登録する            # 任意
 ```
