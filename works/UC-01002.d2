@@ -46,7 +46,7 @@ POL-001: {
     TSK-001017.left: 200
 
     TSK-001003: @../lib/components/task.task
-    TSK-001003.desc.label: "知識原本を\nアップロードする"
+    TSK-001003.desc.label: "記憶原本を\nアップロードする"
     TSK-001003.top: 300
     TSK-001003.left: 500
 
@@ -128,23 +128,23 @@ POL-001: {
 
     # ---- 原本情報表示 ----
     TSK-003010: @../lib/components/task.task
-    TSK-003010.desc.label: "知識原本情報を\n表示する"
+    TSK-003010.desc.label: "記憶原本情報を\n表示する"
     TSK-003010.top: 0
     TSK-003010.left: 300
 
     # ---- 原本登録・知識構築処理 ----
     TSK-003002: @../lib/components/task.task
-    TSK-003002.desc.label: "知識原本の\n新規登録・更新を行う"
+    TSK-003002.desc.label: "記憶原本の\n新規登録・更新を行う"
     TSK-003002.top: 0
     TSK-003002.left: 600
 
     GTW-003001.class: parallel-gateway
-    GTW-003001: 知識原本登録・更新後続処理
+    GTW-003001: 記憶原本登録・更新後続処理
     GTW-003001.top: 0
     GTW-003001.left: 900
 
     TSK-003003: @../lib/components/task.task
-    TSK-003003.desc.label: "知識原本と基本情報を\nもとに知識の構築を行う"
+    TSK-003003.desc.label: "記憶原本と基本情報を\nもとに知識の構築を行う"
 
     TSK-003003-end.class: end-none-event
     TSK-003003-end: 終了
@@ -181,7 +181,7 @@ POL-001: {
 
   # ---- データ ----
   TRANSFER-00.class: data-object
-  TRANSFER-00: "DAT-001\n知識原本"
+  TRANSFER-00: "DAT-001\n記憶原本"
 
   ACT-001.TSK-001003 -> TRANSFER-00: {
     class: data-association
@@ -220,7 +220,7 @@ POL-001: {
   }
 
   TRANSFER-04.class: data-object
-  TRANSFER-04: "DAT-001\n知識原本"
+  TRANSFER-04: "DAT-001\n記憶原本"
 
   ACT-003.TSK-003010 -> TRANSFER-04: {
     class: data-association

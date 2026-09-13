@@ -1,5 +1,5 @@
 # ============================================================
-# UC-01003 知識原本基本情報の更新
+# UC-01003 記憶原本基本情報の更新
 #   - 元定義: works/component-list.md
 #   - 構成: POL-001 開発部
 #   - 備考: TSK-001017 / TSK-003010 は UC-01002 から流用
@@ -10,7 +10,7 @@
 direction: down
 
 title: |md
-  # UC-01003 知識原本基本情報の更新
+  # UC-01003 記憶原本基本情報の更新
   更新日時: 2026/09/13
 |
 title.near: top-center
@@ -46,7 +46,7 @@ POL-001: {
     TSK-001017.left: 200
 
     TSK-001018: @../lib/components/task.task
-    TSK-001018.desc.label: "知識原本基本情報を\n更新する"
+    TSK-001018.desc.label: "記憶原本基本情報を\n更新する"
     TSK-001018.top: 0
     TSK-001018.left: 500
 
@@ -73,20 +73,20 @@ POL-001: {
 
     # ---- 原本情報表示 ----
     TSK-003010: @../lib/components/task.task
-    TSK-003010.desc.label: "知識原本情報を\n表示する"
+    TSK-003010.desc.label: "記憶原本情報を\n表示する"
     TSK-003010.top: 0
     TSK-003010.left: 200
 
     # ---- 基本情報更新処理 ----
     TSK-003011: @../lib/components/task.task
-    TSK-003011.desc.label: "知識原本基本情報の\n更新を行う"
+    TSK-003011.desc.label: "記憶原本基本情報の\n更新を行う"
     TSK-003011.top: 0
     TSK-003011.left: 700
   }
 
   # ---- データ ----
   TRANSFER-00.class: data-object
-  TRANSFER-00: "DAT-001\n知識原本"
+  TRANSFER-00: "DAT-001\n記憶原本"
 
   ACT-003.TSK-003010 -> TRANSFER-00: {
     class: data-association
@@ -96,7 +96,7 @@ POL-001: {
   }
 
   TRANSFER-01.class: data-object
-  TRANSFER-01: "DAT-001\n知識原本"
+  TRANSFER-01: "DAT-001\n記憶原本"
 
   ACT-001.TSK-001018 -> TRANSFER-01: {
     class: data-association
