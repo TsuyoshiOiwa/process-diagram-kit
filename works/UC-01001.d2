@@ -1,0 +1,302 @@
+# ============================================================
+# UC-01001 知識の新規登録
+#   - 元定義: works/UC-01001.md / works/component-list.md
+#   - 構成: POL-001 開発部
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # UC-01001 知識の新規登録
+  更新日時: 2026/09/13
+|
+title.near: top-center
+
+# ------------------------------------------------------------
+# POL-001 プール: 開発部
+# ------------------------------------------------------------
+POL-001: @../lib/components/container.pool
+POL-001: 開発部 (POL-001)
+POL-001: {
+  top: 0
+  left: 0
+  direction: down
+
+  # ---- ACT-001 レーン: 知識管理者 ----
+  ACT-001: @../lib/components/container.lane
+  ACT-001: 知識管理者 (ACT-001)
+  ACT-001: {
+    top:0
+    left:0
+    direction: right
+
+    # ---- 開始イベント ----
+    開始.class: start-none-event
+    開始: 登録開始
+    開始.top: 0
+    開始.left: 0
+
+    # ---- タスク ----
+    TSK-001007: @../lib/components/task.task
+    TSK-001007.desc.label: "知識登録の\n必要情報を表示する"
+    TSK-001007.top: 300
+    TSK-001007.left: 0
+
+    TSK-001008: @../lib/components/task.task
+    TSK-001008.desc.label: "知識登録の\n必要情報を確認する"
+    TSK-001008.top: 300
+    TSK-001008.left: 300
+
+    TSK-001001: @../lib/components/task.task
+    TSK-001001.desc.label: 知識原本を用意する
+    TSK-001001.top: 0
+    TSK-001001.left: 300
+
+    TSK-001002: @../lib/components/task.task
+    TSK-001002.desc.label: "知識基本情報を\n登録する"
+    TSK-001002.top: 300
+    TSK-001002.left: 600
+
+    TSK-001009: @../lib/components/task.task
+    TSK-001009.desc.label: "知識基本情報\n登録結果を確認する"
+    TSK-001009.top: 300
+    TSK-001009.left: 900
+
+    TSK-001003: @../lib/components/task.task
+    TSK-001003.desc.label: "知識原本を\nアップロードする"
+    TSK-001003.top: 300
+    TSK-001003.left: 1200
+
+    TSK-001010: @../lib/components/task.task
+    TSK-001010.desc.label: "知識原本のアップロード\n結果を確認する"
+    TSK-001010.top: 300
+    TSK-001010.left: 1800
+
+    TSK-001011: @../lib/components/task.loop-task
+    TSK-001011.desc.label: "知識構築処理の\n結果を取得する"
+    TSK-001011.top: 300
+    TSK-001011.left: 2100
+
+
+    TSK-001012: @../lib/components/task.task
+    TSK-001012.desc.label: "知識構築処理の\n結果を確認する"
+    TSK-001012.top: 300
+    TSK-001012.left: 2400
+
+    GTW-001001.class: exclusive-gateway
+    GTW-001001: 完了したか？
+    GTW-001002.top: 200
+    GTW-001002.left: 2400
+
+    GTW-001002.class: exclusive-gateway
+    GTW-001002: 結果確認
+    GTW-001002.top: 000
+    GTW-001002.left: 2800
+
+    GTW-001003.class: exclusive-gateway
+    GTW-001003: 再登録するか？
+    GTW-001003.top: 0
+    GTW-001003.left: 1200
+
+    TSK-001006: @../lib/components/task.task
+    TSK-001006.desc.label: 知識を公開する
+    TSK-001006.top: 0
+    TSK-001006.left: 3000
+
+    TSK-001013: @../lib/components/task.task
+    TSK-001013.desc.label: 知識の公開結果\nを確認する
+    TSK-001013.top: 0
+    TSK-001013.left: 3200
+
+    TSK-001005: @../lib/components/task.task
+    TSK-001005.desc.label: 知識を削除する
+    TSK-001005.top: 0
+    TSK-001005.left: 1500
+
+    TSK-001014: @../lib/components/task.task
+    TSK-001014.desc.label: 知識の内容を\n取得する
+    TSK-001014.top: 300
+    TSK-001014.left: 2800
+  
+    TSK-001015: @../lib/components/task.task
+    TSK-001015.desc.label: 知識の内容を\n確認する
+    TSK-001015.top: 100
+    TSK-001015.left: 2800
+
+    # ---- 終了イベント ----
+    終了公開.class: end-none-event
+    終了公開: 公開完了
+    終了公開.top: 0
+    終了公開.left: 3400
+
+    終了中止.class: end-none-event
+    終了中止: 登録中止
+  }
+
+  # ---- A6T-003 レーン: システム ----
+  ACT-003: @../lib/components/container.lane
+  ACT-003: システム (ACT-003)
+  ACT-003: {
+    top: 800
+    left: 0
+    direction: right
+
+    # ---- 必要情報返却 (照会に応答) ----
+    TSK-003006: @../lib/components/task.task
+    TSK-003006.desc.label: "知識登録の\n必要情報を返却する"
+    TSK-003006.top: 0
+    TSK-003006.left: 250
+
+    # ---- 基本情報登録処理 ----
+    TSK-003001: @../lib/components/task.task
+    TSK-003001.desc.label: 知識の新規登録を行う
+    TSK-003001.top: 0
+    TSK-003001.left: 700
+
+    # ---- 原本登録・知識構築処理 ----
+    GTW-003001.class: parallel-gateway
+    GTW-003001: 知識原本登録・更新後続処理
+
+    TSK-003002: @../lib/components/task.task
+    TSK-003002.desc.label: "知識原本の\n新規登録・更新を行う"
+    TSK-003002.top: 0
+    TSK-003002.left: 1200
+
+    TSK-003003: @../lib/components/task.task
+    TSK-003003.desc.label: "知識原本と基本情報を\nもとに知識の構築を行う"
+
+    TSK-003003-end.class: end-none-event
+    TSK-003003-end: 終了
+    TSK-003003-end.top: 400
+    TSK-003003-end.left: 1600
+
+    TSK-003004: @../lib/components/task.task
+    TSK-003004.desc.label: "知識構築タスク情報を表示する"
+    TSK-003004.top: 0
+    TSK-003004.left: 2000
+
+
+    # ---- 削除処理 ----
+    TSK-003005: @../lib/components/task.task
+    TSK-003005.desc.label: 知識の削除を行う
+    TSK-003005.top: 0
+    TSK-003005.left: 1500
+
+    # ---- 知識公開 ----
+    TSK-003007: @../lib/components/task.task
+    TSK-003007.desc.label: 知識を公開する
+    TSK-003007.top: 0
+    TSK-003007.left: 3100
+  
+    # ---- 知識情報取得 ----
+    TSK-003008: @../lib/components/task.task
+    TSK-003008.desc.label: 知識を表示する
+    TSK-003008.top: 0
+    TSK-003008.left: 2800
+
+  }
+
+  # ---- データ ----
+  TRANSFER-00.class: data-object
+  TRANSFER-00: "DAT-004\n知識分類情報"
+    
+  ACT-003.TSK-003006 -> TRANSFER-00: {
+    class: data-association
+  }
+  TRANSFER-00 -> ACT-001.TSK-001008: {
+    class: data-association
+  }
+  
+  TRANSFER-01.class: data-object
+  TRANSFER-01: "DAT-001\n知識原本"
+    
+  ACT-001.TSK-001003 -> TRANSFER-01: {
+    class: data-association
+  }
+  TRANSFER-01 -> ACT-003.TSK-003002: {
+    class: data-association
+  }
+
+  TRANSFER-02.class: data-object
+  TRANSFER-02: "DAT-002\n知識"
+    
+  ACT-001.TSK-001002 -> TRANSFER-02: {
+    class: data-association
+  }
+  TRANSFER-02 -> ACT-003.TSK-003001: {
+    class: data-association
+  }
+
+  TRANSFER-03.class: data-object
+  TRANSFER-03: "DAT-006\n知識構築タスク"
+    
+  ACT-003.TSK-003002 -> TRANSFER-03: {
+    class: data-association
+  }
+  TRANSFER-03 -> ACT-001.TSK-001010: {
+    class: data-association
+  }
+
+  TRANSFER-04.class: data-object
+  TRANSFER-04: "DAT-006\n知識構築タスク\nDAT-002\n知識"
+    
+  ACT-003.TSK-003004 -> TRANSFER-04: {
+    class: data-association
+  }
+  TRANSFER-04 -> ACT-001.TSK-001012: {
+    class: data-association
+  }
+
+  TRANSFER-05.class: data-object
+  TRANSFER-05: "DAT-002:知識"
+  ACT-003.TSK-003007 -> TRANSFER-05: {
+    class: data-association
+  }
+  TRANSFER-05 -> ACT-001.TSK-001013: {
+    class: data-association
+  }
+
+
+
+
+  # ---- シーケンスフロー ----
+  ACT-001.開始 -> ACT-001.TSK-001007
+  ACT-001.TSK-001007 -> ACT-003.TSK-003006
+  ACT-003.TSK-003006 -> ACT-001.TSK-001008
+  ACT-001.TSK-001008 -> ACT-001.TSK-001001
+  ACT-001.TSK-001001 -> ACT-001.TSK-001002
+  ACT-001.TSK-001002 -> ACT-003.TSK-003001
+  ACT-003.TSK-003001 -> ACT-001.TSK-001009
+  ACT-001.TSK-001009 -> ACT-001.TSK-001003
+  ACT-001.TSK-001003 -> ACT-003.TSK-003002
+  ACT-003.TSK-003002 -> ACT-003.GTW-003001
+  ACT-003.GTW-003001 -> ACT-001.TSK-001010: アップロード結果の返却
+  ACT-001.TSK-001010 -> ACT-001.TSK-001011
+  ACT-003.GTW-003001 -> ACT-003.TSK-003003: 知識構築処理
+  ACT-003.TSK-003003 -> ACT-003.TSK-003003-end
+  ACT-001.TSK-001011 -> ACT-003.TSK-003004
+  ACT-003.TSK-003004 -> ACT-001.TSK-001012
+  ACT-001.TSK-001012 -> ACT-001.GTW-001001
+  ACT-001.GTW-001001 -> ACT-001.TSK-001014: 完了
+  ACT-001.TSK-001014 -> ACT-003.TSK-003008
+  ACT-003.TSK-003008 -> ACT-001.TSK-001015
+  ACT-001.TSK-001015 -> ACT-001.GTW-001002
+  ACT-001.GTW-001001 -> ACT-001.TSK-001011: 未完了
+  ACT-001.GTW-001002 -> ACT-001.TSK-001003: 原本再アップロード
+  ACT-001.GTW-001002 -> ACT-001.TSK-001005: 公開しない
+  ACT-001.TSK-001005 -> ACT-003.TSK-003005
+  ACT-003.TSK-003005 -> ACT-001.GTW-001003
+  ACT-001.GTW-001003 -> ACT-001.終了中止: 中止
+  ACT-001.GTW-001003 -> ACT-001.TSK-001002: 再登録する
+  ACT-001.GTW-001002 -> ACT-001.TSK-001006: 公開
+  ACT-001.TSK-001006 -> ACT-003.TSK-003007
+  ACT-003.TSK-003007 -> ACT-001.TSK-001013
+  ACT-001.TSK-001013 -> ACT-001.終了公開
+
+}
+
+# ------------------------------------------------------------
+# メッセージフロー (プール間, 始点円のため <-> で接続)
+# ------------------------------------------------------------
+
