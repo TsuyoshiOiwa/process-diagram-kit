@@ -22,9 +22,9 @@ direction: right
     開始.class: start-none-event
     開始: 開始
 
-    # ---- タスク (テンプレートを部分import) ----
-    タスク1: @../lib/components/task.task
-    タスク1: タスク1の名称
+    # ---- タスク (テンプレートを部分import、キーは要素 ID) ----
+    TSK-000001: @../lib/components/task.task
+    TSK-000001.desc.label: "タスク1の\n処理内容"
 
     # ---- 排他ゲートウェイ ----
     判定.class: exclusive-gateway
@@ -38,15 +38,15 @@ direction: right
   レーン2: @../lib/components/container.lane
   レーン2: レーン2
   レーン2: {
-    タスク2: @../lib/components/task.task
-    タスク2: タスク2の名称
+    TSK-000002: @../lib/components/task.task
+    TSK-000002.desc.label: "タスク2の\n処理内容"
   }
 
   # ---- シーケンスフロー ----
-  レーン1.開始 -> レーン1.タスク1
-  レーン1.タスク1 -> レーン1.判定
+  レーン1.開始 -> レーン1.TSK-000001
+  レーン1.TSK-000001 -> レーン1.判定
   レーン1.判定 -> レーン1.終了: Yes
-  レーン1.判定 -> レーン2.タスク2: No
-  レーン2.タスク2 -> レーン1.終了
+  レーン1.判定 -> レーン2.TSK-000002: No
+  レーン2.TSK-000002 -> レーン1.終了
 }
 

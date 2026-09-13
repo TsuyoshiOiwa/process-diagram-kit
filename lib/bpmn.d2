@@ -5,10 +5,6 @@
 #   図ファイルの先頭でインポートすると vars / classes が利用可能
 #     ...@../lib/bpmn.d2
 #
-#   例) タスク形状を適用する
-#     受注登録.class: task
-#     受注登録: 受注登録
-#
 #   例) メッセージフローを描く (始点円のため <-> で接続)
 #     顧客.注文 <-> 自社.受注確認: {
 #       class: message-flow
@@ -17,9 +13,9 @@
 #
 # タスク (テンプレート) の使い方:
 #   タスクは lib/components/task.d2 のテンプレートを部分import する
-#     受注登録: @../lib/components/task.task
-#     受注登録: 受注登録
-#     受注登録.desc.label: 内容を確認する   # 説明文 (任意)
+#   (キー = 要素 ID がそのままタスク名として表示される)
+#     TSK-001001: @../lib/components/task.task
+#     TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文 (任意、\n で改行)
 #
 # プール / レーン (テンプレート) の使い方:
 #   プール・レーンも lib/components/container.d2 のテンプレートを
