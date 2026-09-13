@@ -80,6 +80,11 @@ POL-001: {
     TSK-001013.top: 0
     TSK-001013.left: 2700
 
+    TSK-001005: @../lib/components/task.task
+    TSK-001005.desc.label: 知識の公開を中止する
+    TSK-001005.top: 0
+    TSK-001005.left: 1800
+
     # ---- ゲートウェイ ----
     GTW-001005.class: exclusive-gateway
     GTW-001005: アップロード結果
@@ -110,7 +115,7 @@ POL-001: {
     終了非公開.class: end-none-event
     終了非公開: 公開せず終了
     終了非公開.top: 0
-    終了非公開.left: 2300
+    終了非公開.left: 1500
   }
 
   # ---- ACT-003 レーン: システム ----
@@ -147,7 +152,7 @@ POL-001: {
     TSK-003003-end.left: 1200
 
     TSK-003004: @../lib/components/task.task
-    TSK-003004.desc.label: "知識構築タスク情報を表示する"
+    TSK-003004.desc.label: "知識構築タスク情報\nを表示する"
     TSK-003004.top: 0
     TSK-003004.left: 1400
 
@@ -160,6 +165,12 @@ POL-001: {
     TSK-003008.desc.label: 知識を表示する
     TSK-003008.top: 0
     TSK-003008.left: 2200
+
+    # ---- 公開中止処理 ----
+    TSK-003005: @../lib/components/task.task
+    TSK-003005.desc.label: 知識の公開を中止する
+    TSK-003005.top: 0
+    TSK-003005.left: 1650
 
     # ---- 知識公開 ----
     TSK-003007: @../lib/components/task.task
@@ -241,7 +252,9 @@ POL-001: {
   ACT-001.GTW-001006 -> ACT-001.GTW-001002: 完了
   ACT-001.GTW-001006 -> ACT-001.TSK-001016: 未完了
   ACT-001.GTW-001002 -> ACT-001.TSK-001003: 原本再アップロード
-  ACT-001.GTW-001002 -> ACT-001.終了非公開: 公開しない
+  ACT-001.GTW-001002 -> ACT-001.TSK-001005: 公開しない
+  ACT-001.TSK-001005 -> ACT-003.TSK-003005
+  ACT-003.TSK-003005 -> ACT-001.終了非公開
   ACT-001.GTW-001002 -> ACT-001.TSK-001006: 公開
   ACT-001.TSK-001006 -> ACT-003.TSK-003007
   ACT-003.TSK-003007 -> ACT-001.TSK-001013
