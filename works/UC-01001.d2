@@ -27,8 +27,8 @@ POL-001: {
   ACT-001: @../lib/components/container.lane
   ACT-001: 知識管理者 (ACT-001)
   ACT-001: {
-    top:0
-    left:0
+    top: 0
+    left: 0
     direction: right
 
     # ---- 開始イベント ----
@@ -54,44 +54,28 @@ POL-001: {
     TSK-001001.left: 300
 
     TSK-001002: @../lib/components/task.task
-    TSK-001002.desc.label: "知識基本情報を\n登録する"
+    TSK-001002.desc.label: "知識原本基本情報を\n登録する"
     TSK-001002.top: 300
     TSK-001002.left: 600
-
-    TSK-001009: @../lib/components/task.task
-    TSK-001009.desc.label: "知識基本情報\n登録結果を確認する"
-    TSK-001009.top: 300
-    TSK-001009.left: 900
 
     TSK-001003: @../lib/components/task.task
     TSK-001003.desc.label: "知識原本を\nアップロードする"
     TSK-001003.top: 300
     TSK-001003.left: 1200
 
-    TSK-001010: @../lib/components/task.task
-    TSK-001010.desc.label: "知識原本のアップロード\n結果を確認する"
-    TSK-001010.top: 300
-    TSK-001010.left: 1800
-
-    TSK-001011: @../lib/components/task.loop-task
-    TSK-001011.desc.label: "知識構築処理の\n結果を取得する"
+    TSK-001011: @../lib/components/task.task
+    TSK-001011.desc.label: "知識構築タスク情報を\n取得する"
     TSK-001011.top: 300
     TSK-001011.left: 2100
 
-
-    TSK-001012: @../lib/components/task.task
-    TSK-001012.desc.label: "知識構築処理の\n結果を確認する"
-    TSK-001012.top: 300
-    TSK-001012.left: 2400
-
     GTW-001001.class: exclusive-gateway
     GTW-001001: 完了したか？
-    GTW-001002.top: 200
-    GTW-001002.left: 2400
+    GTW-001001.top: 200
+    GTW-001001.left: 2400
 
     GTW-001002.class: exclusive-gateway
-    GTW-001002: 結果確認
-    GTW-001002.top: 000
+    GTW-001002: 公開可否判断
+    GTW-001002.top: 100
     GTW-001002.left: 2800
 
     GTW-001003.class: exclusive-gateway
@@ -99,15 +83,30 @@ POL-001: {
     GTW-001003.top: 0
     GTW-001003.left: 1200
 
+    GTW-001004.class: exclusive-gateway
+    GTW-001004: 登録結果
+    GTW-001004.top: 300
+    GTW-001004.left: 900
+
+    GTW-001005.class: exclusive-gateway
+    GTW-001005: アップロード結果
+    GTW-001005.top: 300
+    GTW-001005.left: 1800
+
+    GTW-001006.class: exclusive-gateway
+    GTW-001006: 確認が完了したか？
+    GTW-001006.top: 200
+    GTW-001006.left: 3050
+
     TSK-001006: @../lib/components/task.task
     TSK-001006.desc.label: 知識を公開する
     TSK-001006.top: 0
-    TSK-001006.left: 3000
+    TSK-001006.left: 3200
 
     TSK-001013: @../lib/components/task.task
     TSK-001013.desc.label: 知識の公開結果\nを確認する
     TSK-001013.top: 0
-    TSK-001013.left: 3200
+    TSK-001013.left: 3400
 
     TSK-001005: @../lib/components/task.task
     TSK-001005.desc.label: 知識を削除する
@@ -118,17 +117,22 @@ POL-001: {
     TSK-001014.desc.label: 知識の内容を\n取得する
     TSK-001014.top: 300
     TSK-001014.left: 2800
-  
+
     TSK-001015: @../lib/components/task.task
     TSK-001015.desc.label: 知識の内容を\n確認する
-    TSK-001015.top: 100
-    TSK-001015.left: 2800
+    TSK-001015.top: 300
+    TSK-001015.left: 3000
+
+    TSK-001016: @../lib/components/task.task
+    TSK-001016.desc.label: "知識構築タスク結果を\n取得する"
+    TSK-001016.top: 300
+    TSK-001016.left: 2500
 
     # ---- 終了イベント ----
     終了公開.class: end-none-event
     終了公開: 公開完了
     終了公開.top: 0
-    終了公開.left: 3400
+    終了公開.left: 3600
 
     終了中止.class: end-none-event
     終了中止: 登録中止
@@ -176,7 +180,6 @@ POL-001: {
     TSK-003004.top: 0
     TSK-003004.left: 2000
 
-
     # ---- 削除処理 ----
     TSK-003005: @../lib/components/task.task
     TSK-003005.desc.label: 知識の削除を行う
@@ -187,30 +190,35 @@ POL-001: {
     TSK-003007: @../lib/components/task.task
     TSK-003007.desc.label: 知識を公開する
     TSK-003007.top: 0
-    TSK-003007.left: 3100
-  
+    TSK-003007.left: 3200
+
     # ---- 知識情報取得 ----
     TSK-003008: @../lib/components/task.task
     TSK-003008.desc.label: 知識を表示する
     TSK-003008.top: 0
     TSK-003008.left: 2800
 
+    # ---- 知識構築タスク結果表示 ----
+    TSK-003009: @../lib/components/task.task
+    TSK-003009.desc.label: "知識構築タスク結果を\n表示する"
+    TSK-003009.top: 0
+    TSK-003009.left: 2500
   }
 
   # ---- データ ----
   TRANSFER-00.class: data-object
-  TRANSFER-00: "DAT-004\n知識分類情報"
-    
+  TRANSFER-00: "DAT-004\n知識種別定義"
+
   ACT-003.TSK-003006 -> TRANSFER-00: {
     class: data-association
   }
   TRANSFER-00 -> ACT-001.TSK-001008: {
     class: data-association
   }
-  
+
   TRANSFER-01.class: data-object
   TRANSFER-01: "DAT-001\n知識原本"
-    
+
   ACT-001.TSK-001003 -> TRANSFER-01: {
     class: data-association
   }
@@ -219,8 +227,8 @@ POL-001: {
   }
 
   TRANSFER-02.class: data-object
-  TRANSFER-02: "DAT-002\n知識"
-    
+  TRANSFER-02: "DAT-004\n知識原本"
+
   ACT-001.TSK-001002 -> TRANSFER-02: {
     class: data-association
   }
@@ -230,21 +238,21 @@ POL-001: {
 
   TRANSFER-03.class: data-object
   TRANSFER-03: "DAT-006\n知識構築タスク"
-    
+
   ACT-003.TSK-003002 -> TRANSFER-03: {
     class: data-association
   }
-  TRANSFER-03 -> ACT-001.TSK-001010: {
+  TRANSFER-03 -> ACT-001.TSK-001011: {
     class: data-association
   }
 
   TRANSFER-04.class: data-object
   TRANSFER-04: "DAT-006\n知識構築タスク\nDAT-002\n知識"
-    
+
   ACT-003.TSK-003004 -> TRANSFER-04: {
     class: data-association
   }
-  TRANSFER-04 -> ACT-001.TSK-001012: {
+  TRANSFER-04 -> ACT-001.GTW-001001: {
     class: data-association
   }
 
@@ -257,9 +265,6 @@ POL-001: {
     class: data-association
   }
 
-
-
-
   # ---- シーケンスフロー ----
   ACT-001.開始 -> ACT-001.TSK-001007
   ACT-001.TSK-001007 -> ACT-003.TSK-003006
@@ -267,22 +272,28 @@ POL-001: {
   ACT-001.TSK-001008 -> ACT-001.TSK-001001
   ACT-001.TSK-001001 -> ACT-001.TSK-001002
   ACT-001.TSK-001002 -> ACT-003.TSK-003001
-  ACT-003.TSK-003001 -> ACT-001.TSK-001009
-  ACT-001.TSK-001009 -> ACT-001.TSK-001003
+  ACT-003.TSK-003001 -> ACT-001.GTW-001004
+  ACT-001.GTW-001004 -> ACT-001.TSK-001003: 成功
+  ACT-001.GTW-001004 -> ACT-001.TSK-001002: 失敗
   ACT-001.TSK-001003 -> ACT-003.TSK-003002
   ACT-003.TSK-003002 -> ACT-003.GTW-003001
-  ACT-003.GTW-003001 -> ACT-001.TSK-001010: アップロード結果の返却
-  ACT-001.TSK-001010 -> ACT-001.TSK-001011
+  ACT-003.GTW-003001 -> ACT-001.GTW-001005: アップロード結果の返却
+  ACT-001.GTW-001005 -> ACT-001.TSK-001011: 成功
+  ACT-001.GTW-001005 -> ACT-001.TSK-001003: 失敗
   ACT-003.GTW-003001 -> ACT-003.TSK-003003: 知識構築処理
   ACT-003.TSK-003003 -> ACT-003.TSK-003003-end
   ACT-001.TSK-001011 -> ACT-003.TSK-003004
-  ACT-003.TSK-003004 -> ACT-001.TSK-001012
-  ACT-001.TSK-001012 -> ACT-001.GTW-001001
-  ACT-001.GTW-001001 -> ACT-001.TSK-001014: 完了
+  ACT-003.TSK-003004 -> ACT-001.GTW-001001
+  ACT-001.GTW-001001 -> ACT-001.TSK-001016: 完了
+  ACT-001.TSK-001016 -> ACT-003.TSK-003009
+  ACT-003.TSK-003009 -> ACT-001.TSK-001014
   ACT-001.TSK-001014 -> ACT-003.TSK-003008
   ACT-003.TSK-003008 -> ACT-001.TSK-001015
-  ACT-001.TSK-001015 -> ACT-001.GTW-001002
+  ACT-001.TSK-001015 -> ACT-001.GTW-001006
+  ACT-001.GTW-001006 -> ACT-001.GTW-001002: 完了
+  ACT-001.GTW-001006 -> ACT-001.TSK-001016: 未完了
   ACT-001.GTW-001001 -> ACT-001.TSK-001011: 未完了
+  ACT-001.GTW-001001 -> ACT-001.TSK-001005: 構築失敗
   ACT-001.GTW-001002 -> ACT-001.TSK-001003: 原本再アップロード
   ACT-001.GTW-001002 -> ACT-001.TSK-001005: 公開しない
   ACT-001.TSK-001005 -> ACT-003.TSK-003005
@@ -293,10 +304,8 @@ POL-001: {
   ACT-001.TSK-001006 -> ACT-003.TSK-003007
   ACT-003.TSK-003007 -> ACT-001.TSK-001013
   ACT-001.TSK-001013 -> ACT-001.終了公開
-
 }
 
 # ------------------------------------------------------------
 # メッセージフロー (プール間, 始点円のため <-> で接続)
 # ------------------------------------------------------------
-

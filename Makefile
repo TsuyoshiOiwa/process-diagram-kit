@@ -19,7 +19,7 @@ check:
 build:
 	@mkdir -p $(OUT_DIR)
 	@status=0; \
-	for f in templates/*.d2 examples/*.d2; do \
+	for f in templates/*.d2 examples/*.d2 works/*.d2 ; do \
 		out=$(OUT_DIR)/$$(basename $${f%.d2}).svg; \
 		$(D2) $$f $$out && echo "build: $$out" || status=1; \
 	done; \
