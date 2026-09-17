@@ -1,13 +1,13 @@
 ---
 name: bpmn-diagram
-description: D2 による BPMN 業務プロセス図 (.d2) の作成・編集に使用。works/・examples/・templates/ 配下の .d2 におけるプール・レーン・タスク・イベント・ゲートウェイ・データ要素・フローの追加・修正、新規図の作成時にトリガーする。レイアウト (direction・top/left 等の座標調整) は対象外。
+description: D2 による BPMN 業務プロセス図 (.d2) の作成・編集に使用。works/・examples/・templates/ 配下の .d2 におけるプール・レーン・タスク・イベント・ゲートウェイ・データ要素・フローの追加・修正、新規図の作成時にトリガーする。レイアウト (direction・top/left 等の座標調整) は対象外 (bpmn-layout スキル)。
 ---
 
 # BPMN 図作成 (d2-bpmn)
 
 - 完成イメージ: `examples/pizza-delivery.d2`
 - 要素の実定義: `lib/components/*.d2` (本スキルと矛盾する場合は実定義を優先)
-- レイアウト (direction・top/left 等の座標調整) は別スキルで扱う (タイトルの `title.near` は固定値のみ使用)
+- レイアウト (direction・top/left 等の座標調整) は `bpmn-layout` スキルで扱う (タイトルの `title.near` は固定値のみ使用)
 
 ## 作成ワークフロー
 

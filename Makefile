@@ -1,4 +1,4 @@
-D2      := d2 --layout=tala
+D2      := d2 --layout=tala --font-regular=./fonts/opentype/ipafont-gothic/ipag.ttf
 SRCS    := $(shell find lib templates examples works -name '*.d2' 2>/dev/null)
 OUT_DIR := out
 FILE    ?= examples/order-process.d2
@@ -21,6 +21,16 @@ build:
 	@status=0; \
 	for f in templates/*.d2 examples/*.d2 works/*.d2 ; do \
 		out=$(OUT_DIR)/$$(basename $${f%.d2}).svg; \
+		$(D2) $$f $$out && echo "build: $$out" || status=1; \
+	done; \
+	exit $$status
+
+## buildpng:  テンプレートとサンプルを out/ に SVG 出力する (動作検証)
+buildpng:
+	@mkdir -p $(OUT_DIR)
+	@status=0; \
+	for f in templates/*.d2 examples/*.d2 works/*.d2 ; do \
+		out=$(OUT_DIR)/$$(basename $${f%.d2}).png; \
 		$(D2) $$f $$out && echo "build: $$out" || status=1; \
 	done; \
 	exit $$status

@@ -41,7 +41,7 @@ POL-001: {
 
     # ---- タスク ----
     TSK-001017: @../lib/components/task.task
-    TSK-001017.desc.label: "更新対象の原本を\n選択する"
+    TSK-001017.desc.label: "更新対象の記憶原本を\n選択する"
     TSK-001017.top: 300
     TSK-001017.left: 200
 
@@ -226,6 +226,16 @@ POL-001: {
     class: data-association
   }
   TRANSFER-04 -> ACT-001.TSK-001003: {
+    class: data-association
+  }
+
+  TRANSFER-05.class: data-object
+  TRANSFER-05: "DAT-006\n知識構築タスク"
+
+  ACT-001.TSK-001006 -> TRANSFER-05: {
+    class: data-association
+  }
+  TRANSFER-05 -> ACT-003.TSK-003007: {
     class: data-association
   }
 

@@ -1,0 +1,246 @@
+# ============================================================
+# 図書館 貸し出しフロー
+#   - 構成: PRM-001 利用者 / PRM-002 図書館 (カウンター・システム)
+#   - シナリオ: 貸出 + 予約分岐
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # 図書館 貸し出しフロー
+  更新日時: 2026/09/16
+|
+title.near: top-center
+
+# ------------------------------------------------------------
+# PRM-001 プール: 利用者
+# ------------------------------------------------------------
+PRM-001: @../lib/components/container.pool
+PRM-001: 利用者 (PRM-001)
+PRM-001: {
+  top: 0
+  left: 0
+  direction: right
+
+  ACT-001: @../lib/components/container.lane
+  ACT-001: 利用者 (ACT-001)
+  ACT-001: {
+    top: 0
+    left: 0
+    direction: right
+
+    # ---- 開始イベント ----
+    開始.class: start-none-event
+    開始: 本を借りたい
+    開始.top: 0
+    開始.left: 0
+
+    TSK-001001: @../lib/components/task.task
+    TSK-001001.desc.label: "検索端末で\n目的の資料を検索する"
+    TSK-001001.top: 0
+    TSK-001001.left: 260
+
+    GTW-001001.class: exclusive-gateway
+    GTW-001001: 資料は在架か?
+    GTW-001001.top: 0
+    GTW-001001.left: 560
+
+    TSK-001002: @../lib/components/task.task
+    TSK-001002.desc.label: "貸出カウンターで\n貸出依頼をする"
+    TSK-001002.top: 0
+    TSK-001002.left: 1120
+
+    EVT-001002.class: intermediate-message-catch-event
+    EVT-001002: 資料を受け取る
+    EVT-001002.top: 0
+    EVT-001002.left: 2400
+
+    終了完了.class: end-none-event
+    終了完了: 貸出完了
+    終了完了.top: 0
+    終了完了.left: 2660
+
+    # ---- 予約分岐 (2段目) ----
+    終了断念.class: end-none-event
+    終了断念: 貸出を断念
+    終了断念.top: 320
+    終了断念.left: 260
+
+    GTW-001002.class: exclusive-gateway
+    GTW-001002: 予約するか?
+    GTW-001002.top: 320
+    GTW-001002.left: 560
+
+    TSK-001003: @../lib/components/task.task
+    TSK-001003.desc.label: "貸出カウンターで\n予約申込をする"
+    TSK-001003.top: 320
+    TSK-001003.left: 820
+
+    EVT-001001.class: intermediate-message-catch-event
+    EVT-001001: 入庫連絡を待つ
+    EVT-001001.top: 320
+    EVT-001001.left: 2900
+
+    # ---- シーケンスフロー ----
+    開始 -> TSK-001001
+    TSK-001001 -> GTW-001001
+    GTW-001001 -> TSK-001002: 在架
+    GTW-001001 -> GTW-001002: 貸出中
+    GTW-001002 -> TSK-001003: 予約する
+    GTW-001002 -> 終了断念: 予約しない
+    TSK-001003 -> EVT-001001
+    EVT-001001 -> TSK-001002
+    TSK-001002 -> EVT-001002
+    EVT-001002 -> 終了完了
+  }
+}
+
+# ------------------------------------------------------------
+# PRM-002 プール: 図書館
+# ------------------------------------------------------------
+PRM-002: @../lib/components/container.pool
+PRM-002: 図書館 (PRM-002)
+PRM-002: {
+  top: 800
+  left: 0
+  direction: right
+
+  # ---- ACT-002 レーン: 貸出カウンター ----
+  ACT-002: @../lib/components/container.lane
+  ACT-002: 貸出カウンター (ACT-002)
+  ACT-002: {
+    top: 0
+    left: 0
+    direction: right
+
+    EVT-002001.class: start-message-event
+    EVT-002001: 貸出依頼受信
+    EVT-002001.top: 0
+    EVT-002001.left: 1120
+
+    TSK-002001: @../lib/components/task.task
+    TSK-002001.desc.label: "利用者カードと\n利用者情報を確認する"
+    TSK-002001.top: 0
+    TSK-002001.left: 1380
+
+    GTW-002001.class: exclusive-gateway
+    GTW-002001: カードは有効か?
+    GTW-002001.top: 0
+    GTW-002001.left: 1680
+
+    TSK-002002: @../lib/components/task.task
+    TSK-002002.desc.label: "システムへ\n貸出手続きを依頼する"
+    TSK-002002.top: 0
+    TSK-002002.left: 1980
+
+    TSK-002004: @../lib/components/task.task
+    TSK-002004.desc.label: "資料とカードを\n手渡す"
+    TSK-002004.top: 0
+    TSK-002004.left: 2280
+
+    TSK-002003: @../lib/components/task.task
+    TSK-002003.desc.label: "カードを返却し\n理由を説明する"
+    TSK-002003.top: 320
+    TSK-002003.left: 1680
+
+    終了拒否.class: end-none-event
+    終了拒否: 貸出拒否
+    終了拒否.top: 320
+    終了拒否.left: 1940
+
+    EVT-002002.class: start-message-event
+    EVT-002002: 予約申込受信
+    EVT-002002.top: 640
+    EVT-002002.left: 820
+
+    TSK-002005: @../lib/components/task.task
+    TSK-002005.desc.label: 予約情報を登録する
+    TSK-002005.top: 640
+    TSK-002005.left: 1080
+
+    # ---- シーケンスフロー ----
+    EVT-002001 -> TSK-002001
+    TSK-002001 -> GTW-002001
+    GTW-002001 -> TSK-002002: 有効
+    GTW-002001 -> TSK-002003: 無効
+    TSK-002003 -> 終了拒否
+    EVT-002002 -> TSK-002005
+  }
+
+  # ---- ACT-003 レーン: 貸出システム ----
+  ACT-003: @../lib/components/container.lane
+  ACT-003: 貸出システム (ACT-003)
+  ACT-003: {
+    top: 1000
+    left: 0
+    direction: right
+
+    TSK-003001: @../lib/components/task.task
+    TSK-003001.desc.label: 資料の状況を確認する
+    TSK-003001.top: 0
+    TSK-003001.left: 1980
+
+    GTW-003001.class: exclusive-gateway
+    GTW-003001: 貸出可能か?
+    GTW-003001.top: 0
+    GTW-003001.left: 2240
+
+    TSK-003002: @../lib/components/task.task
+    TSK-003002.desc.label: 貸出登録を行う
+    TSK-003002.top: 0
+    TSK-003002.left: 2500
+
+    TSK-003003: @../lib/components/task.task
+    TSK-003003.desc.label: 予約情報を登録する
+    TSK-003003.top: 640
+    TSK-003003.left: 1080
+
+    EVT-003001.class: intermediate-message-throw-event
+    EVT-003001: 入庫連絡を送信する
+    EVT-003001.top: 640
+    EVT-003001.left: 2900
+
+    終了通知.class: end-none-event
+    終了通知: 予約連絡完了
+    終了通知.top: 640
+    終了通知.left: 3160
+
+    EVT-003002.class: end-error-event
+    EVT-003002: 貸出不可
+    EVT-003002.top: 320
+    EVT-003002.left: 2240
+
+    # ---- シーケンスフロー ----
+    TSK-003001 -> GTW-003001
+    GTW-003001 -> TSK-003002: 可
+    GTW-003001 -> EVT-003002: 不可
+    TSK-003003 -> EVT-003001
+    EVT-003001 -> 終了通知
+  }
+
+  # ---- カウンター <-> システム (同一プール内レーン横断) ----
+  ACT-002.TSK-002002 -> ACT-003.TSK-003001
+  ACT-003.TSK-003002 -> ACT-002.TSK-002004
+  ACT-002.TSK-002005 -> ACT-003.TSK-003003
+}
+
+# ------------------------------------------------------------
+# メッセージフロー (プール間)
+# ------------------------------------------------------------
+PRM-001.ACT-001.TSK-001002 <-> PRM-002.ACT-002.EVT-002001: {
+  class: message-flow
+  label: 貸出依頼
+}
+PRM-001.ACT-001.TSK-001003 <-> PRM-002.ACT-002.EVT-002002: {
+  class: message-flow
+  label: 予約申込
+}
+PRM-002.ACT-003.EVT-003001 <-> PRM-001.ACT-001.EVT-001001: {
+  class: message-flow
+  label: 入庫連絡
+}
+PRM-002.ACT-002.TSK-002004 <-> PRM-001.ACT-001.EVT-001002: {
+  class: message-flow
+  label: 資料・カード
+}
