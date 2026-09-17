@@ -25,7 +25,7 @@ build:
 	done; \
 	exit $$status
 
-## buildpng:  テンプレートとサンプルを out/ に SVG 出力する (動作検証)
+## buildpng:  テンプレートとサンプルを out/ に PNG 出力する (動作検証)
 buildpng:
 	@mkdir -p $(OUT_DIR)
 	@status=0; \
