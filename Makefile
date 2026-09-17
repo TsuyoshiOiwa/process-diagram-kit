@@ -1,7 +1,7 @@
 D2      := d2 --layout=tala --font-regular=./fonts/opentype/ipafont-gothic/ipag.ttf
 SRCS    := $(shell find lib templates examples works -name '*.d2' 2>/dev/null)
 OUT_DIR := out
-FILE    ?= examples/order-process.d2
+FILE    ?= examples/pizza-delivery.d2
 
 .PHONY: fmt check build watch clean help
 

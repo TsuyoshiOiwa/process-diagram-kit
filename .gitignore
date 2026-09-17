@@ -3,6 +3,10 @@ out/
 *.svg
 *.png
 
+# ソース資産: lib/icons 配下のアイコンは例外 (リポジトリ管理)
+!lib/icons/*.svg
+!lib/icons/*.png
+
 # エディタ・OS
 *.tmp
 .DS_Store
