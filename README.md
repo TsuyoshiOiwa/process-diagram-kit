@@ -3,7 +3,7 @@
 [D2](https://d2lang.com/) で BPMN 風の業務プロセス図を描くためのテンプレート・クラス定義集と、
 AI エージェント用スキル (opencode) のセットです。
 
-![要素プレビュー](lib/icons/preview.png)
+<img src="examples/preview.png" width="720">
 
 ## 特徴
 

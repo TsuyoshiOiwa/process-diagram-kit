@@ -1,6 +1,6 @@
 # コンポーネントリスト
 
-## Business Usecase
+## Business-Usecase
 - BUC-01 知識管理
 - BUC-02 システム開発
 
