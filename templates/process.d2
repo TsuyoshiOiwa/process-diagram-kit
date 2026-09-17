@@ -4,7 +4,13 @@
 # ============================================================
 ...@../lib/bpmn
 
-direction: right
+direction: down
+
+title: |md
+  # タイトル
+  更新日時: 2026/09/13
+|
+title.near: top-center
 
 # ------------------------------------------------------------
 # プール (組織 / システムの境界)
@@ -12,12 +18,16 @@ direction: right
 プールA: @../lib/components/container.pool
 プールA: プールA
 プールA: {
+  direction: right
   # ----------------------------------------------------------
   # レーン (担当区分)
   # ----------------------------------------------------------
   レーン1: @../lib/components/container.lane
   レーン1: レーン1
   レーン1: {
+    top: 0
+    left: 0
+  
     # ---- 開始イベント ----
     開始.class: start-none-event
     開始: 開始
@@ -38,6 +48,7 @@ direction: right
   レーン2: @../lib/components/container.lane
   レーン2: レーン2
   レーン2: {
+
     TSK-000002: @../lib/components/task.task
     TSK-000002.desc.label: "タスク2の\n処理内容"
   }

@@ -13,8 +13,8 @@ description: D2 による BPMN 業務プロセス図 (.d2) の作成・編集に
 
 1. `templates/process.d2` を `works/` にコピーして編集する (作成する図は `works/` に置く)
 2. 編集したら `make fmt` で整形する
-3. `make check` で構文検証する。works/ は `make build` の対象外のため、
-   SVG 出力は `d2 --layout=tala works/xxx.d2 out/xxx.svg` で直接確認する (out/ がなければ作成)
+3. `make check` で構文検証する。SVG 出力は `make build` (templates / examples / works を対象に `out/` へ出力) か、
+   単一ファイルは `./scripts/render.sh works/xxx.d2 svg` で確認する
 
 ## 基本骨格
 

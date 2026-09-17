@@ -58,27 +58,27 @@ POL-001: {
     TSK-001016: @../lib/components/task.task
     TSK-001016.desc.label: "知識構築タスク結果を\n取得する"
     TSK-001016.top: 300
-    TSK-001016.left: 1800
+    TSK-001016.left: 2000
 
     TSK-001014: @../lib/components/task.task
     TSK-001014.desc.label: "知識の内容を\n取得する"
     TSK-001014.top: 300
-    TSK-001014.left: 2100
+    TSK-001014.left: 2300
 
     TSK-001015: @../lib/components/task.task
     TSK-001015.desc.label: "知識の内容を\n確認する"
     TSK-001015.top: 300
-    TSK-001015.left: 2300
+    TSK-001015.left: 2500
 
     TSK-001006: @../lib/components/task.task
     TSK-001006.desc.label: 知識を公開する
     TSK-001006.top: 300
-    TSK-001006.left: 2500
+    TSK-001006.left: 2700
 
     TSK-001013: @../lib/components/task.task
     TSK-001013.desc.label: 知識の公開結果\nを確認する
     TSK-001013.top: 0
-    TSK-001013.left: 2700
+    TSK-001013.left: 2800
 
     TSK-001005: @../lib/components/task.task
     TSK-001005.desc.label: 知識の公開を中止する
@@ -92,7 +92,7 @@ POL-001: {
     GTW-001005.left: 900
 
     GTW-001001.class: exclusive-gateway
-    GTW-001001: 完了したか？
+    GTW-001001: 完了したか9
     GTW-001001.top: 200
     GTW-001001.left: 1500
 
@@ -110,12 +110,12 @@ POL-001: {
     終了公開.class: end-none-event
     終了公開: 更新完了
     終了公開.top: 0
-    終了公開.left: 2900
+    終了公開.left: 3000
 
     終了非公開.class: end-none-event
     終了非公開: 公開せず終了
     終了非公開.top: 0
-    終了非公開.left: 1500
+    終了非公開.left: 1700
   }
 
   # ---- ACT-003 レーン: システム ----
@@ -159,29 +159,29 @@ POL-001: {
     TSK-003009: @../lib/components/task.task
     TSK-003009.desc.label: "知識構築タスク結果を\n表示する"
     TSK-003009.top: 0
-    TSK-003009.left: 1900
+    TSK-003009.left: 2000
 
     TSK-003008: @../lib/components/task.task
     TSK-003008.desc.label: 知識を表示する
     TSK-003008.top: 0
-    TSK-003008.left: 2200
+    TSK-003008.left: 2300
 
     # ---- 公開中止処理 ----
     TSK-003005: @../lib/components/task.task
     TSK-003005.desc.label: 知識の公開を中止する
     TSK-003005.top: 0
-    TSK-003005.left: 1650
+    TSK-003005.left: 1750
 
     # ---- 知識公開 ----
     TSK-003007: @../lib/components/task.task
     TSK-003007.desc.label: 知識を公開する
     TSK-003007.top: 0
-    TSK-003007.left: 2500
+    TSK-003007.left: 2600
   }
 
   # ---- データ ----
   TRANSFER-00.class: data-object
-  TRANSFER-00: "DAT-001\n記憶原本"
+  TRANSFER-00: "DAO-001\n記憶原本"
 
   ACT-001.TSK-001003 -> TRANSFER-00: {
     class: data-association
@@ -191,7 +191,7 @@ POL-001: {
   }
 
   TRANSFER-01.class: data-object
-  TRANSFER-01: "DAT-006\n知識構築タスク"
+  TRANSFER-01: "DAO-006\n知識構築タスク"
 
   ACT-003.TSK-003002 -> TRANSFER-01: {
     class: data-association
@@ -201,7 +201,7 @@ POL-001: {
   }
 
   TRANSFER-02.class: data-object
-  TRANSFER-02: "DAT-006\n知識構築タスク\nDAT-002\n知識"
+  TRANSFER-02: "DAO-006\n知識構築タスク\nDAO-002\n知識"
 
   ACT-003.TSK-003004 -> TRANSFER-02: {
     class: data-association
@@ -211,7 +211,7 @@ POL-001: {
   }
 
   TRANSFER-03.class: data-object
-  TRANSFER-03: "DAT-002:知識"
+  TRANSFER-03: "DAO-002:知識"
   ACT-003.TSK-003007 -> TRANSFER-03: {
     class: data-association
   }
@@ -220,7 +220,7 @@ POL-001: {
   }
 
   TRANSFER-04.class: data-object
-  TRANSFER-04: "DAT-001\n記憶原本"
+  TRANSFER-04: "DAO-001\n記憶原本"
 
   ACT-003.TSK-003010 -> TRANSFER-04: {
     class: data-association
@@ -230,7 +230,7 @@ POL-001: {
   }
 
   TRANSFER-05.class: data-object
-  TRANSFER-05: "DAT-006\n知識構築タスク"
+  TRANSFER-05: "DAO-006\n知識構築タスク"
 
   ACT-001.TSK-001006 -> TRANSFER-05: {
     class: data-association
