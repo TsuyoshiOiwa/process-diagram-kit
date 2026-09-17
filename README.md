@@ -18,7 +18,7 @@ AI エージェント用スキル (opencode) のセットです。
 
 | ツール | 用途 |
 |---|---|
-| [d2](https://d2lang.com/) (v0.8+) | コンパイル・整形・検証。レイアウトは `--layout=tala` を使用 (要ライセンス) |
+| [d2](https://d2lang.com/) (v0.9.0+) | コンパイル・整形・検証。レイアウトは `--layout=tala` を使用 |
 | VS Code 拡張 `terrastruct.d2` | エディタ内プレビュー・補完 |
 | GNU make | 整形・検証・ビルドの統一コマンド |
 
