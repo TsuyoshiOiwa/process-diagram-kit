@@ -1,4 +1,4 @@
-# d2-bpmn
+# process-diagram-kit
 
 [D2](https://d2lang.com/) で BPMN 風の業務プロセス図を描くためのテンプレート・クラス定義集と、
 AI エージェント用スキル (opencode) のセットです。
