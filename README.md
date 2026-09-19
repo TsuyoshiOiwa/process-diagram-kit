@@ -79,10 +79,10 @@ out/                         ビルド成果物の出力先 (管理対象外)
 
 ## 運用フロー (要素 ID 管理)
 
-`works/` の実例のように、`component-list.md` で
+`examples/` の実例のように、`component-list.md` で
 アクター (POL)・ユースケース (UC)・タスク (TSK) などの要素 ID 台帳を管理し、
 図ファイルではキー = 要素 ID (例: `TSK-000001`) として参照する運用を想定しています。
-実例: `works/component-list.md` / `works/UC-01001.d2`
+実例: `examples/component-list.md` / `examples/UC-01001.d2`
 
 ## AI 支援での作図 (opencode)
 
