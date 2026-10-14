@@ -30,6 +30,15 @@
 # データ要素 (data-object / data-store / data-variation) のクラスは
 # lib/components/data.d2 で定義し、下記の spread import で再公開している
 # (...@../lib/bpmn だけで使える)
+#
+# 本ライブラリ独自拡張 (BPMN 規格外) の要素:
+#   - start-notification-catch-event (通知開始イベント, catch)
+#   - intermediate-notification-catch-event (通知キャッチ中間イベント, catch)
+#   - intermediate-notification-throw-event (通知スロー中間イベント, throw)
+#   - end-notification-throw-event (通知スロー終了イベント, throw)
+#   - notification-flow (通知フロー, 同一プール内の非同期通知)
+# 詳細は .opencode/skills/bpmn-diagram/SKILL.md と
+# examples/notification-flow.d2 を参照すること
 # ============================================================
 
 ...@components/stroke
@@ -78,6 +87,8 @@ vars: {
     sequence-stroke: "#4B5563"
     message-stroke: "#9333EA"
     association-stroke: "#9CA3AF"
+    # 通知フロー (本ライブラリ独自拡張)
+    notification-stroke: "#EA580C"
   }
 }
 

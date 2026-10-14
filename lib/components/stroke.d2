@@ -16,14 +16,20 @@
 #   - message-flow:      破線 + 始点白抜き円 + 終点白抜き矢印
 #   - association:       点線 + 矢印なし (「--」接続と組み合わせる)
 #   - data-association:  点線 + 終点白抜き矢印
+#   - notification-flow: 破線 + 始点塗りつぶし円 + 終点白抜き矢印
+#                        (独自拡張, 同一プール内の非同期通知)
 #
 # 制約 (D2 の仕様上):
 #   - 矢印なしはクラスで指定できないため、association は
 #     接続を「--」で書くこととセットで使う
 #   - 始点矢印 (source-arrowhead) は接続構文に始点エンドポイントが
-#     必要なため、message-flow は接続を「<->」で書くこととセットで使う
+#     必要なため、message-flow / notification-flow は
+#     接続を「<->」で書くこととセットで使う
 #   - BPMN 標準のスラッシュ付き実線 (デフォルトフロー) は
 #     D2 に同等の矢印形状がないため未提供
+#   - 一点鎖線 (dash-dot) は D2 に存在しないため、
+#     notification-flow は破線で代用する
+#     (message-flow との区別は線色 + 始点円の塗りで行う)
 # ============================================================
 
 classes: {
@@ -77,6 +83,41 @@ classes: {
     style: {
       stroke: ${bpmn.association-stroke}
       stroke-dash: 2
+      font-size: 12
+    }
+  }
+  # 通知フロー (破線, 始点塗りつぶし円 + 終点白抜き矢印)
+  #   本ライブラリ独自拡張 (BPMN 非標準)。
+  #   メッセージフローはプール間専用のため、同一プール内のレーン間
+  #   (レーン横断) の非同期連携を記述できない。この制約を解消する
+  #   ために設けた。以降の仕様拡張も「同一プール内レーン間の非同期
+  #   連携の表現」を判断軸とする
+  #   同一プール内で通知を発行する側 (タスクまたは通知スローイベント:
+  #   intermediate-notification-throw-event / end-notification-throw-event)
+  #   から、通知を受信する側 (通知キャッチイベント:
+  #   intermediate-notification-catch-event / start-notification-catch-event)
+  #   を結ぶ。実行トークンを伝搬させない非同期通知の関係を表す
+  #   ※ 始点円を出すには接続を「<->」で書く必要がある
+  #   ※ D2 に一点鎖線がないため破線で代用
+  #     (message-flow との区別は線色 + 始点円の塗りで行う)
+  notification-flow: {
+    source-arrowhead: {
+      shape: circle
+      style: {
+        filled: true
+        stroke: ${bpmn.notification-stroke}
+      }
+    }
+    target-arrowhead: {
+      shape: triangle
+      style: {
+        filled: false
+        stroke: ${bpmn.notification-stroke}
+      }
+    }
+    style: {
+      stroke: ${bpmn.notification-stroke}
+      stroke-dash: 3
       font-size: 12
     }
   }

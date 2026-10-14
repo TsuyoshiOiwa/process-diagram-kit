@@ -1,0 +1,194 @@
+# ============================================================
+# サンプル: 通知フロー / 通知イベント (本ライブラリ独自拡張)
+#
+#   同一プール内でレーンを横断する通知の表現を 2 パターン示す。
+#
+#   [業務システム] タスク → 中間 catch
+#   - notification-flow: 通知登録タスク → 通知キャッチイベント
+#     (実行トークンを伝搬させない。始点円のため「<->」で接続)
+#   - 通知の到着前後は通常の sequence-flow で接続する
+#
+#   [障害対応] 中間 throw → 開始 catch
+#   - intermediate-notification-throw-event: プロセス途中で通知を発行する
+#     (発行後も sequence-flow で処理を継続する)
+#   - start-notification-catch-event: 通知の到着でプロセスを開始する
+#     (プロセス途中で待つ場合は intermediate-notification-catch-event)
+#   - notification-flow: 発行側 (throw) → 受信側 (catch)
+#     (実行トークンを伝搬させない。到着した通知が開始イベントのトリガーになる)
+#
+# 通知の意味論 (属性) はラベル・コメント・ドキュメントで表現する
+#   (D2 に独自属性を直接記述する方法はないため)
+#   - recipient:      通知先 (例: ユーザーレーンの作業者 / 当番のオペレーター)
+#   - type:           通知種別 (例: 処理完了 / 障害)
+#   - correlationKey: 業務処理との対応キー (例: 処理ID / 障害ID)
+#   - deliveryMode:   temporary (一時) / persistent (永続。待機開始前に
+#                     作成された通知も対象になり得る)
+#   - channel:        通知経路 (例: アプリ内通知)
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # 通知フロー / 通知イベント (独自拡張)
+  更新日時: 2026-10-15
+|
+title.near: top-center
+
+# ============================================================
+# プール 1: 業務システム (タスク → 中間 catch)
+# ============================================================
+業務システム: @../lib/components/container.pool
+業務システム: 業務システム
+業務システム: {
+  top: 0
+  left: 0
+
+  # ---- レーン: システム ----
+  # バックグラウンドで処理を実行し、特定ユーザー宛てに通知を登録する
+  # 通知登録 (recipient: ユーザー / type: 処理完了 / deliveryMode: persistent
+  #          / channel: アプリ内通知 / correlationKey: 処理ID)
+  システム: @../lib/components/container.lane
+  システム: システム
+  システム: {
+    top: 0
+    left: 0
+    direction: right
+    非同期処理: @../lib/components/task.task
+    非同期処理: "バックグラウンドで\n処理を実行する"
+    非同期処理.top: 0
+    非同期処理.left: 0
+    通知登録: @../lib/components/task.task
+    通知登録: "特定ユーザー宛てに\n通知を登録する"
+    通知登録.top: 0
+    通知登録.left: 520
+    処理終了.class: end-none-event
+    処理終了: システム側の処理終了
+    処理終了.top: 0
+    処理終了.left: 800
+    非同期処理 -> 通知登録
+    通知登録 -> 処理終了
+  }
+
+  # ---- レーン: ユーザー ----
+  # 通知が到着するまで Notification Catch Event で待機する
+  ユーザー: @../lib/components/container.lane
+  ユーザー: ユーザー
+  ユーザー: {
+    top: 400
+    left: 0
+    direction: right
+    開始.class: start-none-event
+    開始: 業務開始
+    開始.top: 0
+    開始.left: 0
+    業務処理: @../lib/components/task.task
+    業務処理: 業務処理を行う
+    業務処理.top: 0
+    業務処理.left: 260
+    通知待ち.class: intermediate-notification-catch-event
+    通知待ち: 通知の到着を待つ
+    通知待ち.top: 0
+    通知待ち.left: 520
+    通知確認: @../lib/components/task.task
+    通知確認: "通知内容を\n確認する"
+    通知確認.top: 0
+    通知確認.left: 650
+    後続処理: @../lib/components/task.task
+    後続処理: "後続の\n業務を行う"
+    後続処理.top: 0
+    後続処理.left: 910
+    終了.class: end-none-event
+    終了: 業務完了
+    終了.top: 0
+    終了.left: 1170
+    開始 -> 業務処理
+    業務処理 -> 通知待ち
+    通知待ち -> 通知確認
+    通知確認 -> 後続処理
+    後続処理 -> 終了
+  }
+
+  # ---- 通知フロー (同一プール内・レーン横断) ----
+  #   実行トークンを伝搬させない非同期通知の関係。
+  #   シーケンスフロー (実線) とメッセージフロー (紫・白抜き始点円) と区別される
+  システム.通知登録 <-> ユーザー.通知待ち: {
+    class: notification-flow
+    label: 処理完了通知
+  }
+}
+
+# ============================================================
+# プール 2: 障害対応 (中間 throw → 開始 catch)
+# ============================================================
+障害対応: @../lib/components/container.pool
+障害対応: 障害対応
+障害対応: {
+  top: 800
+  left: 0
+
+  # ---- レーン: システム ----
+  # 監視で障害を検知したら、当番のオペレーター宛てに通知を発行する
+  # 通知発行 (recipient: 当番のオペレーター / type: 障害 / deliveryMode: persistent
+  #          / channel: アプリ内通知 / correlationKey: 障害ID)
+  システム: @../lib/components/container.lane
+  システム: システム
+  システム: {
+    top: 0
+    left: 0
+    direction: right
+    障害検知: @../lib/components/task.task
+    障害検知: "監視により\n障害を検知する"
+    障害検知.top: 0
+    障害検知.left: 0
+    通知発行.class: intermediate-notification-throw-event
+    通知発行: 障害通知を発行
+    通知発行.top: 0
+    通知発行.left: 260
+    検知終了.class: end-none-event
+    検知終了: 検知処理の終了
+    検知終了.top: 0
+    検知終了.left: 390
+    障害検知 -> 通知発行
+    通知発行 -> 検知終了
+  }
+
+  # ---- レーン: オペレーター ----
+  # 通知の到着をトリガーにプロセスを開始する
+  # (開始イベントの前に待機タスクは書かない)
+  オペレーター: @../lib/components/container.lane
+  オペレーター: オペレーター
+  オペレーター: {
+    top: 400
+    left: 0
+    direction: right
+    障害対応開始.class: start-notification-catch-event
+    障害対応開始: 障害通知の到着
+    障害対応開始.top: 0
+    障害対応開始.left: 260
+    状況確認: @../lib/components/task.task
+    状況確認: "障害の状況を\n確認する"
+    状況確認.top: 0
+    状況確認.left: 390
+    初動対応: @../lib/components/task.task
+    初動対応: "初動対応を\n行う"
+    初動対応.top: 0
+    初動対応.left: 650
+    対応完了.class: end-none-event
+    対応完了: 対応完了
+    対応完了.top: 0
+    対応完了.left: 910
+    障害対応開始 -> 状況確認
+    状況確認 -> 初動対応
+    初動対応 -> 対応完了
+  }
+
+  # ---- 通知フロー (同一プール内・レーン横断) ----
+  #   実行トークンを伝搬させない非同期通知の関係。
+  #   このフロー自体はプロセスを開始させず、到着した通知が
+  #   開始イベントのトリガーになる
+  システム.通知発行 <-> オペレーター.障害対応開始: {
+    class: notification-flow
+    label: 障害通知
+  }
+}

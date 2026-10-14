@@ -11,6 +11,8 @@ AI エージェント用スキル (opencode) のセットです。
   `class:` 指定だけで使える (アイコン SVG 付き 60 種以上)
 - **プール / レーン / タスクは D2 テンプレート** (部分 import) で提供
 - **色トークンの集約**: 配色は `lib/bpmn.d2` の `vars.bpmn` を変更するだけで全体に反映
+- **独自拡張 (BPMN 非標準) 同梱**: 同一プール内の特定ユーザー宛ての非同期通知を表す
+  Notification Flow / Notification Catch Event を提供
 - **opencode スキル同梱**: `bpmn-diagram` (作図) / `bpmn-layout` (レイアウト調整) の
   手順・知見がエージェントに継承され、AI 支援下の作図が可能
 
@@ -50,6 +52,27 @@ TSK-000001.desc.label: "作業をする"
 終了: 完了
 
 開始 -> TSK-000001 -> 終了
+```
+
+## 独自拡張 (BPMN 非標準)
+
+標準 BPMN では書きにくい「同一プール内の特定ユーザー宛ての非同期通知」を表すため、
+次の 2 つの独自クラスを追加している。仕様の詳細は `examples/notification-flow.d2` と
+`.opencode/skills/bpmn-diagram/SKILL.md` を参照。
+
+- `start-notification-catch-event` / `intermediate-notification-catch-event`:
+  特定ユーザー宛ての通知の到着でプロセスを開始 / 到着を待つイベント (catch、ベル)
+- `intermediate-notification-throw-event` / `end-notification-throw-event`:
+  通知を発行する中間 / 終了イベント (throw、塗りつぶしベル)
+- `notification-flow`: 同一プール内のレーン間の非同期通知を表すフロー
+  (メッセージフローはプール間専用のためレーン間には使えない)。
+  発行側 (タスクまたは throw) と受信側 (catch) を `<->` で結ぶ。
+  実行順序ではなく通知の対応関係を表す
+
+```d2
+通知待ち.class: intermediate-notification-catch-event
+
+システム.通知登録 <-> ユーザー.通知待ち: { class: notification-flow }
 ```
 
 ## ディレクトリ構成

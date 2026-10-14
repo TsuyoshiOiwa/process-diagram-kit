@@ -9,17 +9,20 @@
 #   タイマー.class: intermediate-timer-catch-event
 #   タイマー: 10分経過
 #
-# 構成 (全 36種・新SVGセットと 1:1):
-#   - 開始系 9種: 単一細枠の円 + 種別アイコン
+# 構成 (全 36種 + 独自拡張 4種・新SVGセットと 1:1):
+#   - 開始系 9種 + 独自拡張 1種: 単一細枠の円 + 種別アイコン
 #       none / メッセージ / タイマー / 条件 / シグナル /
 #       複合 / 並列複合 / エスカレーション / エラー
-#   - 中間系 18種: 二重円 + 種別アイコン
+#       + 通知 catch (独自拡張)
+#   - 中間系 18種 + 独自拡張 2種: 二重円 + 種別アイコン
 #       none / メッセージ / タイマー / 条件 / リンク /
 #       シグナル / 複合 / 並列複合 / エスカレーション /
 #       補償 / キャンセル / エラー (キャッチ・スロー別)
-#   - 終了系 9種: 太枠の円 + 種別アイコン
+#       + 通知 catch / throw (独自拡張)
+#   - 終了系 9種 + 独自拡張 1種: 太枠の円 + 種別アイコン
 #       none / メッセージ / エスカレーション / エラー /
 #       キャンセル / 補償 / シグナル / 複合 / 終了
+#       + 通知 throw (独自拡張)
 #
 # 規約:
 #   - SVG アイコン側に外枠の円 (単一 / 二重 / 太線) が
@@ -280,6 +283,56 @@ classes: {
   intermediate-error-catch-event: {
     shape: image
     icon: ${bpmn.icon-dir}/intermediate-error-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+
+  # --------------------------------------------------------
+  # 独自拡張 (BPMN 非標準)
+  # --------------------------------------------------------
+  # 通知イベント (本ライブラリ独自拡張)
+  #   catch = 受信側: 特定受信者宛ての非同期通知の到着を
+  #           待機 (中間) / プロセス開始のトリガー (開始) にする
+  #   throw = 送信側: 特定受信者宛ての非同期通知を発行する
+  #   発行側 (タスクまたは throw) と受信側は
+  #   lib/components/stroke.d2 の notification-flow
+  #   (「<->」接続) で結ぶ
+  #
+  #   ※ 開始系は他種別と異なり catch を名前に含める
+  #     (catch / throw の対応を種別内で明示するため)
+  # 通知開始イベント (catch)
+  start-notification-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/start-notification-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # 通知キャッチ中間イベント (catch)
+  intermediate-notification-catch-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-notification-catch-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # 通知スロー中間イベント (throw)
+  intermediate-notification-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/intermediate-notification-throw-event.svg
+    label.near: outside-top-center
+    style.font-size: 12
+    width: 48
+    height: 48
+  }
+  # 通知スロー終了イベント (throw)
+  end-notification-throw-event: {
+    shape: image
+    icon: ${bpmn.icon-dir}/end-notification-throw-event.svg
     label.near: outside-top-center
     style.font-size: 12
     width: 48

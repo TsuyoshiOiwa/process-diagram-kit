@@ -79,7 +79,7 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 | `task.multi-instance-sequential-task` | 逐次マルチインスタンスタスク |
 | `task.compensation-task` | 補償タスク |
 
-### イベント (クラス・36種)
+### イベント (クラス・36種 + 独自拡張 4種)
 
 クラス名の規則: `start-<種別>-event` / `intermediate-<種別>-<catch|throw>-event` / `end-<種別>-event`
 
@@ -98,6 +98,7 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 | compensation | - | catch / throw | ○ |
 | cancel | - | catch のみ | ○ |
 | terminate | - | - | ○ |
+| notification (独自拡張) | catch のみ | catch / throw | throw のみ |
 
 ```d2
 注文.class: start-none-event
@@ -106,6 +107,30 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 焼成: オーブンで焼成
 食事.class: end-none-event
 食事: 食事完了
+```
+
+notification は本ライブラリ独自拡張 (BPMN 非標準)。特定受信者宛ての非同期通知を
+catch (受信) / throw (送信) で表す (ベルアイコン。throw は塗りつぶし)。
+
+- 開始 catch (`start-notification-catch-event`): 通知の到着をトリガーにプロセスを開始する
+- 中間 catch (`intermediate-notification-catch-event`): プロセス途中で通知の到着を待機する
+- 中間 throw (`intermediate-notification-throw-event`): プロセス途中で通知を発行する (発行後も処理を継続)
+- 終了 throw (`end-notification-throw-event`): プロセスの終了時に通知を発行する
+
+※ 開始のみ他種別と異なりクラス名に catch を含める (catch / throw の対応を明示するため)
+
+発行側 (タスクまたは throw イベント) と受信側は `notification-flow` で結ぶ
+(詳細は本スキルの「独自拡張 (BPMN 非標準)」、実例: `examples/notification-flow.d2`)。
+
+```d2
+通知待ち.class: intermediate-notification-catch-event
+通知待ち: 通知の到着を待つ
+
+障害対応開始.class: start-notification-catch-event
+障害対応開始: 障害通知の到着
+
+通知発行.class: intermediate-notification-throw-event
+通知発行: 通知を発行
 ```
 
 ### ゲートウェイ (クラス・5種)
@@ -132,6 +157,48 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 |---|---|
 | `subprocess` | サブプロセス (破線枠の角丸矩形) |
 
+### 独自拡張 (BPMN 非標準)
+
+| クラス | 内容 |
+|---|---|
+| `start-notification-catch-event` | 通知開始イベント (catch。通知の到着をトリガーにプロセスを開始) |
+| `intermediate-notification-catch-event` | 通知キャッチ中間イベント (catch。特定受信者宛ての非同期通知の到着待ち) |
+| `intermediate-notification-throw-event` | 通知スロー中間イベント (throw。通知を発行し、処理は継続) |
+| `end-notification-throw-event` | 通知スロー終了イベント (throw。プロセス終了時に通知を発行) |
+| `notification-flow` | 通知フロー (同一プール内の非同期通知。レーン横断可・制御フローではない) |
+
+catch = 受信側 (到着を待つ / 開始トリガーにする)、throw = 送信側 (通知を発行する)。
+他種別と異なり開始イベントにも catch を名前に含む。
+
+作成の動機: メッセージフローはプール間のみ接続可のため、同一プール内のレーン間
+(レーン横断) の非同期連携を記述できなかった。notification-flow はこの制約を解消
+するために設けたものであり、今後の仕様拡張も「同一プール内レーン間の非同期連携
+の表現」を基本判断軸とする。
+
+意味論上のルール:
+
+1. notification-flow は同一プール内の要素間でのみ使用できる (プール間は message-flow を使う)
+2. レーン横断可。シーケンスフローと同様にプール階層にフルパスで書く
+3. notification-flow は制御フローではない (実行トークンを伝搬させない)。
+   通知イベントの後続処理は sequence-flow で接続する
+4. 中間 catch はプロセス途中での到着待ち、開始 catch は到着によるプロセス開始
+   (インスタンス生成)、中間 throw は発行後も処理継続、終了 throw は発行と同時に
+   プロセス終了を表す。到着と既読・確認は別概念として扱い、確認は catch 後続の
+   タスクで表現する
+5. 受信者の識別はレーン名だけに依存せず、通知の宛先情報で行う
+6. 標準 BPMN 要素 (message-flow / sequence-flow / signal event など) の意味は変更しない
+
+通知の属性 (D2 に独自属性を直接記述する方法はないため、ラベル・コメント・ドキュメントで表現する):
+
+- `recipient`: 通知先
+- `type`: 通知種別
+- `correlationKey`: 業務処理との対応キー
+- `deliveryMode`: `temporary` (一時) / `persistent` (永続。待機開始前に作成された通知も対象になり得る)
+- `channel`: 通知経路
+
+実例: `examples/notification-flow.d2`
+(タスク → 中間 catch / 中間 throw → 開始 catch の 2 パターン)
+
 ## 接続 (フロー)
 
 | クラス | 用途 | 接続構文 (クラスとセット) |
@@ -140,6 +207,7 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 | `message-flow` | プール間のメッセージ | `<->` 必須 (始点円の表示に必要) |
 | `association` | 関連 (矢印なし) | `--` 必須 |
 | `data-association` | データ要素との接続 | `->` |
+| `notification-flow` | 同一プール内の非同期通知 (独自拡張) | `<->` 必須 (始点円の表示に必要) |
 
 ```d2
 # シーケンスフロー (ゲートウェイ分岐には条件ラベルを付ける)
@@ -152,6 +220,12 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
   label: ピザ注文
 }
 
+# 通知フロー (同一プール内・レーン横断, 独自拡張)
+システム.通知登録 <-> ユーザー.通知待ち: {
+  class: notification-flow
+  label: 処理完了通知
+}
+
 # データ関連
 注文確認 -> 注文情報1: { class: data-association }
 ```
@@ -159,10 +233,12 @@ TSK-001001.desc.label: "知識原本を\nアップロードする"   # 説明文
 BPMN 規則:
 
 - シーケンスフローは同一プール内のみ (レーン横断は可)。メッセージフローはプール間のみ
+- 通知フロー (独自拡張) は同一プール内のみ (レーン横断は可)。制御フローではないため
+  実行トークンを伝搬させず、通知到着後の処理はシーケンスフローで接続する。プール間には使えない
 - ゲートウェイの分岐先フローには条件ラベル (`: 前払い` 等) を付ける
 - 開始イベントは細枠円・中間は二重円・終了は太枠円。catch (受信・待機) と throw (送信・発生) を種別で区別する
 - データオブジェクトはタスクへ入力 (`データ -> タスク`)・タスクから出力 (`タスク -> データ`) で data-association 接続する
-- レーン横断のフローはプールの階層でフルパスを書く (`受付.注文確認 -> 調理.調理開始`)
+- レーン横断のフロー (シーケンス / 通知) はプールの階層でフルパスを書く (`受付.注文確認 -> 調理.調理開始`)
 - メッセージフローは最上位階層に書き、両端をフルパスで指定する
 - データオブジェクトは使用するレーン内に定義する。同一図内の同名データは番号で区別する
   (`注文情報1` / `注文情報2`)。ラベルは md ブロックで詳細も書ける
