@@ -17,20 +17,24 @@ check:
 
 ## build:  テンプレートとサンプルを out/ に SVG 出力する (動作検証)
 build:
-	@mkdir -p $(OUT_DIR)
+	@mkdir -p $(OUT_DIR)/templates
+	@mkdir -p $(OUT_DIR)/examples
+	@mkdir -p $(OUT_DIR)/works
 	@status=0; \
 	for f in templates/*.d2 examples/*.d2 works/*.d2 ; do \
-		out=$(OUT_DIR)/$$(basename $${f%.d2}).svg; \
+		out=$(OUT_DIR)/$${f%.d2}.svg; \
 		$(D2) $$f $$out && echo "build: $$out" || status=1; \
 	done; \
 	exit $$status
 
 ## buildpng:  テンプレートとサンプルを out/ に PNG 出力する (動作検証)
 buildpng:
-	@mkdir -p $(OUT_DIR)
+	@mkdir -p $(OUT_DIR)/templates
+	@mkdir -p $(OUT_DIR)/examples
+	@mkdir -p $(OUT_DIR)/works
 	@status=0; \
 	for f in templates/*.d2 examples/*.d2 works/*.d2 ; do \
-		out=$(OUT_DIR)/$$(basename $${f%.d2}).png; \
+		out=$(OUT_DIR)/$${f%.d2}.png; \
 		$(D2) $$f $$out && echo "build: $$out" || status=1; \
 	done; \
 	exit $$status
