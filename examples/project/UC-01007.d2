@@ -1,0 +1,116 @@
+# ============================================================
+# UC-01007 知識の公開中止
+#   - 元定義: works/ref-UC-01001.d2 (UC-01001 知識の新規登録の分割)
+#   - 構成: POL-001 開発部
+#   - 備考: 開始イベントは 1 つとし、前段 (BUC-01001) の
+#           ゲートウェイで中止への経路が確定した後に開始する。
+#           知識構築タスク情報の取得 (TSK-001011) →
+#           システムによる情報表示 (TSK-003004) →
+#           公開結果の確認 (TSK-001013) →
+#           公開の中止 (TSK-001005 / TSK-003014) の順に実行する
+#           (タスクの呼び出し形式は ref-UC-01001.d2 に準拠)
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # UC-01007 知識の公開中止
+  更新日時: 2026/10/15
+|
+title.near: top-center
+
+# ------------------------------------------------------------
+# POL-001 プール: 開発部
+# ------------------------------------------------------------
+POL-001: @../lib/components/container.pool
+POL-001: 開発部 (POL-001)
+POL-001: {
+  top: 0
+  left: 0
+  direction: down
+
+  # ---- ACT-001 レーン: 知識管理者 ----
+  ACT-001: @../lib/components/container.lane
+  ACT-001: 知識管理者 (ACT-001)
+  ACT-001: {
+    top: 0
+    left: 0
+    direction: right
+
+    # ---- 開始イベント ----
+    開始.class: start-none-event
+    開始: 中止開始
+    開始.top: 0
+    開始.left: 0
+
+    # ---- タスク ----
+    TSK-001011: @../lib/components/task.task
+    TSK-001011.desc.label: "知識構築タスク情報を\n取得する"
+    TSK-001011.top: 0
+    TSK-001011.left: 300
+
+    TSK-001013: @../lib/components/task.task
+    TSK-001013.desc.label: "知識の公開結果\nを確認する"
+    TSK-001013.top: 0
+    TSK-001013.left: 900
+
+    TSK-001005: @../lib/components/task.task
+    TSK-001005.desc.label: 知識の公開を中止する
+    TSK-001005.top: 0
+    TSK-001005.left: 1200
+
+    # ---- 終了イベント ----
+    終了中止.class: end-none-event
+    終了中止: 登録中止
+    終了中止.top: 0
+    終了中止.left: 1800
+  }
+
+  # ---- A6T-003 レーン: システム ----
+  ACT-003: @../lib/components/container.lane
+  ACT-003: システム (ACT-003)
+  ACT-003: {
+    top: 500
+    left: 0
+    direction: right
+
+    # ---- 知識構築タスク情報表示 ----
+    TSK-003004: @../lib/components/task.task
+    TSK-003004.desc.label: "知識構築タスク情報を表示する"
+    TSK-003004.top: 0
+    TSK-003004.left: 600
+
+    # ---- 公開中止処理 ----
+    TSK-003014: @../lib/components/task.task
+    TSK-003014.desc.label: "知識構築タスクステータスを\n更新する"
+    TSK-003014.top: 0
+    TSK-003014.left: 1500
+  }
+
+  # ---- データ ----
+  TRANSFER-00.class: data-object
+  TRANSFER-00: "DAO-006\n知識構築タスク"
+
+  TRANSFER-00 -> ACT-001.TSK-001011: {
+    class: data-association
+  }
+
+  TRANSFER-01.class: data-object
+  TRANSFER-01: "DAO-006\n知識構築タスク\nDAO-002\n知識"
+
+  ACT-003.TSK-003004 -> TRANSFER-01: {
+    class: data-association
+  }
+  TRANSFER-01 -> ACT-001.TSK-001013: {
+    class: data-association
+  }
+
+  # ---- シーケンスフロー ----
+  ACT-001.開始 -> ACT-001.TSK-001011
+  ACT-001.TSK-001011 -> ACT-003.TSK-003004
+  ACT-003.TSK-003004 -> ACT-001.TSK-001013
+  ACT-001.TSK-001013 -> ACT-001.TSK-001005
+  ACT-001.TSK-001005 -> ACT-003.TSK-003014
+  ACT-003.TSK-003014 -> ACT-001.終了中止
+}

@@ -1,0 +1,141 @@
+# ============================================================
+# BUC-01002 知識の更新
+#   - 元定義: works/component-list.md
+#   - 構成: POL-001 開発部 (システムレーンなしの業務フロー)
+#   - 構成要素: UC-01008 / UC-01005 / UC-01006 / UC-01007
+#     (詳細は各 UC 図, 元資料は works/UC-01002.d2 を参照)
+#   - 備考: UC-01008 の後、知識構築完了のメッセージを受信して
+#           UC-01005 を開始する (日をまたぐ待ち)。
+#           UC-01005 の後で構築の成否を判断し、失敗時は
+#           原本再アップロード (再試行) か公開中止を選択する。
+#           公開しない場合は UC-01007 の前段で再登録するか？を
+#           判断する (再登録する → UC-01008 / 中止 → UC-01007)
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # BUC-01002 知識の更新
+  更新日時: 2026-10-15
+|
+title.near: top-center
+
+# ------------------------------------------------------------
+# POL-001 プール: 開発部
+# ------------------------------------------------------------
+POL-001: @../lib/components/container.pool
+POL-001: 開発部 (POL-001)
+POL-001: {
+  top: 0
+  left: 0
+  direction: down
+
+  # ---- ACT-001 レーン: 知識管理者 ----
+  ACT-001: @../lib/components/container.lane
+  ACT-001: 知識管理者 (ACT-001)
+  ACT-001: {
+    top: 0
+    left: 0
+    direction: right
+
+    # ---- 開始イベント ----
+    開始.class: start-none-event
+    開始: 更新開始
+    開始.top: 0
+    開始.left: 0
+
+    # ---- UC (サブプロセス) ----
+    UC-01008: @../lib/components/task.task
+    UC-01008.desc.label: "記憶原本の再アップロード"
+    UC-01008.top: 0
+    UC-01008.left: 200
+
+    # ---- メッセージイベント (入口: UC-01008 より, 日をまたぐ待ち) ----
+    知識構築完了.class: intermediate-notification-catch-event
+    知識構築完了: 知識構築完了
+    知識構築完了.top: 0
+    知識構築完了.left: 600
+
+    UC-01005: @../lib/components/task.task
+    UC-01005.desc.label: "構築した知識の\nレビュー"
+    UC-01005.top: 0
+    UC-01005.left: 900
+
+    UC-01006: @../lib/components/task.task
+    UC-01006.desc.label: "知識の公開"
+    UC-01006.top: 0
+    UC-01006.left: 1400
+
+    UC-01007: @../lib/components/task.task
+    UC-01007.desc.label: "知識の公開中止"
+    UC-01007.top: 300
+    UC-01007.left: 1400
+
+    # ---- ゲートウェイ ----
+    GTW-001001.class: exclusive-gateway
+    GTW-001001: 構築結果
+    GTW-001001.top: 0
+    GTW-001001.left: 750
+
+    GTW-001002.class: exclusive-gateway
+    GTW-001002: 公開可否判断
+    GTW-001002.top: 0
+    GTW-001002.left: 1200
+
+    GTW-001009.class: exclusive-gateway
+    GTW-001009: 再試行するか？
+
+    GTW-001004.class: parallel-gateway
+    GTW-001004: 非同期処理
+    GTW-001004.top: 0
+    GTW-001004.left: 400
+
+    # ---- 終了イベント ----
+    終了公開.class: end-none-event
+    終了公開: 公開完了
+    終了公開.top: 0
+    終了公開.left: 1600
+
+    終了中止.class: end-none-event
+    終了中止: 更新中止
+    終了中止.top: 300
+    終了中止.left: 1600
+  }
+
+  ACT-003: @../lib/components/container.lane
+  ACT-003: システム (ACT-003)
+  ACT-003: {
+    top: 600
+    left: 0
+    direction: right
+
+    UC-03001: @../lib/components/task.task
+    UC-03001.desc.label: "知識の構築"
+    UC-03001.top: 0
+    UC-03001.left: 600
+
+    処理終了.class: end-none-event
+  }
+
+  # ---- シーケンスフロー ----
+  ACT-001.開始 -> ACT-001.UC-01008
+  ACT-001.UC-01008 -> ACT-001.GTW-001004
+  ACT-001.GTW-001004 -> ACT-001.知識構築完了
+  ACT-001.GTW-001004 -> ACT-003.UC-03001
+  ACT-003.UC-03001 <-> ACT-001.知識構築完了: {
+    class: notification-flow
+  }
+  ACT-003.UC-03001 -> ACT-003.処理終了
+  ACT-001.知識構築完了 -> ACT-001.GTW-001001
+  ACT-001.GTW-001001 -> ACT-001.UC-01005: 成功
+  ACT-001.GTW-001001 -> ACT-001.GTW-001009: 失敗
+  ACT-001.UC-01005 -> ACT-001.GTW-001002
+  ACT-001.GTW-001009 -> ACT-001.UC-01008: 原本再アップロード
+  ACT-001.GTW-001009 -> ACT-001.UC-01007: 公開中止
+  ACT-001.GTW-001002 -> ACT-001.UC-01006: 公開
+  ACT-001.GTW-001002 -> ACT-001.UC-01007: 公開しない
+  ACT-001.GTW-001002 -> ACT-001.UC-01008: 原本再アップロード
+  ACT-001.UC-01006 -> ACT-001.終了公開
+  ACT-001.UC-01007 -> ACT-001.終了中止
+}

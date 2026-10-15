@@ -1,0 +1,194 @@
+# ============================================================
+# UC-03001 知識の構築
+#   - 元定義: works/component-list.md
+#   - 構成: POL-001 開発部 (システムレーンのみの業務フロー)
+#   - 備考: UC-01004 / UC-01008 の GTW-003003 (知識構築処理) から起動される
+#           (知識構築タスクは前段の TSK-003012 で登録済み)
+#           構築の成否は知識構築タスクのステータス (DAV-002) で判断する
+#   - 備考: 構築完了・構築失敗は通知スローで BUC-01001 に通知
+#           (BUC-01001 側の知識構築完了キャッチイベントに対応)
+#   - 備考: 通知の宛先は知識管理者 (ACT-001) とし、notification-flow を
+#           ACT-001 レーンに対して接続して宛先を表す
+#   - 備考: 構築失敗時のリトライは扱わず、再試行は BUC-01001 側の
+#           原本再アップロード / 公開中止に任せる
+# ============================================================
+...@../lib/bpmn
+
+direction: down
+
+title: |md
+  # UC-03001 知識の構築
+  更新日時: 2026-10-15
+|
+title.near: top-center
+
+# ------------------------------------------------------------
+# POL-001 プール: 開発部
+# ------------------------------------------------------------
+POL-001: @../lib/components/container.pool
+POL-001: 開発部 (POL-001)
+POL-001: {
+  top: 0
+  left: 0
+  direction: down
+
+  # ---- ACT-001 レーン: 知識管理者 (通知の宛先) ----
+  ACT-001: @../lib/components/container.lane
+  ACT-001: 知識管理者 (ACT-001)
+  ACT-001: {
+    top: 0
+    left: 1420
+    direction: right
+  }
+
+  # ---- ACT-003 レーン: システム ----
+  ACT-003: @../lib/components/container.lane
+  ACT-003: システム (ACT-003)
+  ACT-003: {
+    top: 100
+    left: 0
+    direction: right
+
+    # ---- 開始イベント ----
+    開始.class: start-none-event
+    開始: 知識構築開始
+    開始.top: 320
+    開始.left: 0
+
+    # ---- タスク ----
+    TSK-003003: @../lib/components/task.task
+    TSK-003003.desc.label: "記憶原本と基本情報を\nもとに知識の構築を行う"
+    TSK-003003.top: 320
+    TSK-003003.left: 260
+
+    TSK-003013: @../lib/components/task.task
+    TSK-003013.desc.label: 構築した知識を登録する
+    TSK-003013.top: 320
+    TSK-003013.left: 860
+
+    TSK-003014: @../lib/components/task.task
+    TSK-003014.desc.label: "知識構築タスクステータスを\n更新する"
+    TSK-003014.top: 320
+    TSK-003014.left: 1120
+
+    # ---- ゲートウェイ ----
+    GTW-003002.class: exclusive-gateway
+    GTW-003002: 構築結果
+    GTW-003002.top: 320
+    GTW-003002.left: 600
+
+    # ---- 通知 (宛先: 知識管理者 ACT-001) ----
+    構築完了通知.class: intermediate-notification-throw-event
+    構築完了通知: "構築完了通知\n(知識管理者宛)"
+    構築完了通知.top: 320
+    構築完了通知.left: 1480
+
+    構築失敗通知.class: intermediate-notification-throw-event
+    構築失敗通知: "構築失敗通知\n(知識管理者宛)"
+    構築失敗通知.top: 640
+    構築失敗通知.left: 1480
+
+    # ---- 終了イベント ----
+    終了完了.class: end-none-event
+    終了完了: 構築完了
+    終了完了.top: 320
+    終了完了.left: 1640
+
+    終了失敗.class: end-none-event
+    終了失敗: 構築失敗
+    終了失敗.top: 640
+    終了失敗.left: 1640
+
+    # ---- データ ----
+    TRANSFER-00.class: data-object
+    TRANSFER-00: "DAO-001\n記憶原本"
+    TRANSFER-00.top: 640
+    TRANSFER-00.left: 0
+
+    TRANSFER-01.class: data-object
+    TRANSFER-01: "DAO-001\n記憶原本基本情報"
+    TRANSFER-01.top: 640
+    TRANSFER-01.left: 180
+
+    TRANSFER-02.class: data-object
+    TRANSFER-02: "DAO-004\n知識種別定義"
+    TRANSFER-02.top: 640
+    TRANSFER-02.left: 360
+
+    TRANSFER-03.class: data-object
+    TRANSFER-03: "DAO-006\n知識構築タスク\nDAV-002\n知識構築タスクステータス"
+    TRANSFER-03.top: 640
+    TRANSFER-03.left: 560
+
+    TRANSFER-04.class: data-object
+    TRANSFER-04: "DAO-002\n知識"
+    TRANSFER-04.top: 0
+    TRANSFER-04.left: 1080
+
+    TRANSFER-05.class: data-object
+    TRANSFER-05: "DAO-003\n知識グラフ"
+    TRANSFER-05.top: 140
+    TRANSFER-05.left: 1080
+
+    DAS-001.class: data-store
+    DAS-001: Git
+    DAS-001.top: 0
+    DAS-001.left: 860
+  }
+
+  # ---- シーケンスフロー ----
+  ACT-003.開始 -> ACT-003.TSK-003003
+  ACT-003.TSK-003003 -> ACT-003.GTW-003002
+  ACT-003.GTW-003002 -> ACT-003.TSK-003013: 成功
+  ACT-003.GTW-003002 -> ACT-003.TSK-003014: 失敗
+  ACT-003.TSK-003013 -> ACT-003.TSK-003014
+  ACT-003.TSK-003014 -> ACT-003.構築完了通知
+  ACT-003.TSK-003014 -> ACT-003.構築失敗通知
+  ACT-003.構築完了通知 -> ACT-003.終了完了
+  ACT-003.構築失敗通知 -> ACT-003.終了失敗
+
+  # ---- 通知フロー (同一プール内・レーン横断, 実行トークンを伝搬させない) ----
+  #   通知の宛先 (知識管理者 ACT-001 レーン) を notification-flow で表す
+  ACT-003.構築完了通知 <-> ACT-001: {
+    class: notification-flow
+  }
+  ACT-003.構築失敗通知 <-> ACT-001: {
+    class: notification-flow
+  }
+
+  # ---- データ関連 ----
+  # ---- 構築の入力 ----
+  ACT-003.TRANSFER-00 -> ACT-003.TSK-003003: {
+    class: data-association
+  }
+  ACT-003.TRANSFER-01 -> ACT-003.TSK-003003: {
+    class: data-association
+  }
+  ACT-003.TRANSFER-02 -> ACT-003.TSK-003003: {
+    class: data-association
+  }
+
+  # ---- 知識構築タスクの成否判断 ----
+  ACT-003.TSK-003003 -> ACT-003.TRANSFER-03: {
+    class: data-association
+  }
+  ACT-003.TRANSFER-03 -> ACT-003.GTW-003002: {
+    class: data-association
+  }
+
+  # ---- 構築した知識の登録 ----
+  ACT-003.TSK-003013 -> ACT-003.TRANSFER-04: {
+    class: data-association
+  }
+  ACT-003.TSK-003013 -> ACT-003.TRANSFER-05: {
+    class: data-association
+  }
+  ACT-003.TSK-003013 -> ACT-003.DAS-001: {
+    class: data-association
+  }
+
+  # ---- 失敗ステータスの更新 ----
+  ACT-003.TSK-003014 -> ACT-003.TRANSFER-03: {
+    class: data-association
+  }
+}
